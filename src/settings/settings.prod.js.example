@@ -1,0 +1,14 @@
+// PROD
+export default {
+  "clientId" : "CLIENT_ID",
+  "clientSecret" : "CLIENT_SECRET",
+  
+  "uniqueBets" : true,
+  "show_debug" : false,
+  "prevent_close" : true,
+  "window_settings": {
+    "width": 1200,
+    "height": 700,
+    "resizable": false
+  }
+}

@@ -1,0 +1,13 @@
+// DEV
+export default {
+  "clientId" : "CLIENT_ID",
+  "clientSecret" : "CLIENT_SECRET",
+  
+  "uniqueBets" : false,
+  "show_debug" : true,
+  "prevent_close" : false,
+  "window_settings": {
+    "width": 1700,
+    "height": 700
+  }
+}

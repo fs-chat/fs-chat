@@ -1,0 +1,16 @@
+// Pour builder l'exe de production
+- Changer le numéro de version dans package.json puis "npm run build"
+- Uploader dans le dossier client-download du serveur (.exe et latest.yml).
+- Mettre à jour le numéro de version dans download.php du serveur. (même dossier)
+
+
+// Generer un certificat (inutile)
+
+$cert = New-SelfSignedCertificate -DnsName sample.contoso.com -Type CodeSigning -CertStoreLocation Cert:\CurrentUser\My
+
+$CertPassword = ConvertTo-SecureString -String "Passw0rd" -Force –AsPlainText 
+Export-PfxCertificate -Cert "cert:\CurrentUser\My\$($cert.Thumbprint)" -FilePath "F:\test.pfx" -Password $CertPassword
+
+$env:CSC_LINK="F:\test.pfx"
+$env:CSC_KEY_PASSWORD="Passw0rd"
+$env:CSC_IDENTITY_AUTO_DISCOVERY="true"

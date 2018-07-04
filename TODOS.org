@@ -1,0 +1,81 @@
+
+# Bot de compilation des résultats pour le pour le landing rate (CptCanada Youtube)
+
+* Requirements
+** Doit pouvoir fonctionner sur la machine du host (Electron)
+** Doit pouvoir lire l'ensemble du chat
+** Doit être flexible pour le streamer au niveau du style
+** Doit permettre d'afficher les résultats
+*** Afficher directement dans l'application
+*** Poster un message avec le nom du streamer (chat-bot)
+**** Permettre de modifier le texte affiché pour le gagnant
+** Doit permettre de choisir quand le concours se termine / commence
+   - Deux options s'offrent au streamer:
+     - Désigner des utilisateurs qui peuvent écrire des commandes dans le chat (fin / debut)
+       - Afficher le début et la fin dans le chat
+     - Laisser la possibilité au streamer de cliquer lui-même sur des boutons
+
+
+* Bot compilateurs de votes 
+** DONE Se connecter à l'API de google
+*** DONE Stocker le token de l'usager connecté dans la store
+*** DONE Obtenir les informations du compte Youtube connecté
+*** DONE Ajouter les informations de la chaine dans la Session
+*** DONE Afficher les informations du compte dans paramètres et en haut à droite
+** DONE Stocker le token du youtube et récupérer à l'ouverture de l'application
+*** Stocker après login
+*** Récupérer et valider après ouverture
+** DONE Écouter le chat youtube et afficher dans l'application (test)
+*** DONE Comment scrapper avec Casper.js (hack)
+*** DONE Sauvegarder les nouveau messages dans le store
+*** API youtube avec compte connecté
+**** Créer un liveStream
+**** Afficher le livestream dans la liste
+***** Rafraichir à toutes les X secondes pour voir si il y a un liveStream
+**** Quand il y a un livestream, la vue passe au jeu
+***** 3 États: 
+****** Non débuté
+******* Un bouton pour commencer le concours (avant atterissage)
+****** Débuté
+******* Un bouton pour terminer le concours
+******* Un bouton pour annuler le concours
+******* La liste des participants avec leur vitesse estimée
+******** Option pour supprimer un guess de la liste
+****** Terminé
+******* Voir les trois gagants
+******* Bouton pour commencer un nouveau concours
+******* La liste en lecture seule
+** Fenêtre de concours
+*** Gérer l'état du concours
+**** Commencer le concours
+**** Terminer le concours
+**** Compiler les résultats
+*** Voir l'état du concours
+**** Débuté / Non débutté
+**** Si débutté: 
+***** Nom de l'admin qui a débuté le concours
+***** Liste des résultats compilés
+**** Si terminé: 
+***** Liste des gagnants
+***** Bouton pour poster un message
+****** Pouvoir voir et modifier le message avant l'envoi
+****** Voir si le message a déja été envoyé
+*** Modifier les paramètres
+**** Modifier le message de Début / Fin de compilation (ou désactiver)
+**** Modifier le message d'annonce du gagnant 
+
+* Afficher directement dans la vidéo du stream (overlay)
+** Hoster une application web sur un port de la machine
+   - Pour permettre au streamer de créer un widget dans OBS
+   - L'application va hoster une application sur HTTP
+   - Cette application HTTP aura un lien socket.io avec l'application
+**** Pouvoir customizer le style du message
+*** Lancer un serveur HTTP
+*** Ouvrir le lien vers l'URL dans le navigateur
+*** Envoyer des messages avec socket.io vers cette application
+** Modifier l'overlay
+*** Activer / Désactiver / Ouvrir dans le navigateur
+*** Modifier le Style CSS et le gabarit HTML
+
+
+* DONE Créer une application (Electron-Vue)

@@ -2,6 +2,8 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import path from 'path'
 
+import expressInit from '../express/server.js'
+
 import SETTINGS_DEV from '../settings/settings.dev.js'
 import SETTINGS_PROD from '../settings/settings.prod.js'
 
@@ -146,6 +148,8 @@ function createWindow () {
     chatWindow.loadURL(url);
     chatWindow.show();
   });
+
+  expressInit();
 }
 
 app.on('ready', createWindow)

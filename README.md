@@ -1,6 +1,6 @@
-# my-project
+# FS-Chat
 
-> An electron-vue project
+> This project is built [Electron](https://github.com/electron/electron)
 
 #### Build Setup
 

@@ -33,11 +33,10 @@
     mounted: function() {
       var self = this;
 
-      // TODO: Vérifier si le tokenId de youtube est encore valide
-      // Aller à l'Home des paramètres si manquant ou invalide
+      // TODO: Load initial settings
 
       this.loading = false;
-      this.$router.push({ name: 'Home' });
+      this.$router.push({ name: 'LandingGame' });
     }
   }
 </script>

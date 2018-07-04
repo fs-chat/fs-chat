@@ -1,6 +1,6 @@
 # FS-Chat
 
-> This project is built [Electron](https://github.com/electron/electron)
+> This project is built with [Electron](https://github.com/electron/electron)
 
 #### Build Setup
 

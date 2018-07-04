@@ -2,13 +2,13 @@
   <div class="sidebar" data-image="static/img/sidebar.jpg">
 		<div class="sidebar-wrapper">
 			<div class="logo">
-				<router-link :to="{name:'Home'}" class="simple-text">
+				<router-link :to="{name:'LandingGame'}" class="simple-text">
 				 FS Chat
 				</router-link>
 			</div>
 
 			<ul class="nav">
-				<router-link to="/home" tag="li" active-class="active">	
+				<router-link :to="{name:'LandingGame'}" tag="li" active-class="active">	
 					<a>
 						<i class="pe-7s-medal"></i>
 						<p>Landing bets</p>

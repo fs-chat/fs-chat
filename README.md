@@ -1,6 +1,6 @@
-# my-project
+# FS-Chat
 
-> An electron-vue project
+> This project is built with [Electron](https://github.com/electron/electron)
 
 #### Build Setup
 
@@ -8,7 +8,7 @@
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:9080
+# run app locally
 npm run dev
 
 # build electron application for production

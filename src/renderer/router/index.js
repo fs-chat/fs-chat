@@ -10,9 +10,9 @@ export default new Router({
       component: require('@/ui/layout/DashView').default,
       children: [
         {
-          path: 'home',
-          name: 'Home',
-          component: require('@/ui/Home').default,
+          path: 'landing-game',
+          name: 'LandingGame',
+          component: require('@/ui/LandingGame').default,
         },
         {
           path: 'settings',

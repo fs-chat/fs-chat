@@ -1,37 +1,11 @@
 
 # Bot de compilation des résultats pour le pour le landing rate (CptCanada Youtube)
 
-* Requirements
-** Doit pouvoir fonctionner sur la machine du host (Electron)
-** Doit pouvoir lire l'ensemble du chat
-** Doit être flexible pour le streamer au niveau du style
-** Doit permettre d'afficher les résultats
-*** Afficher directement dans l'application
-*** Poster un message avec le nom du streamer (chat-bot)
-**** Permettre de modifier le texte affiché pour le gagnant
-** Doit permettre de choisir quand le concours se termine / commence
-   - Deux options s'offrent au streamer:
-     - Désigner des utilisateurs qui peuvent écrire des commandes dans le chat (fin / debut)
-       - Afficher le début et la fin dans le chat
-     - Laisser la possibilité au streamer de cliquer lui-même sur des boutons
-
-
-* Bot compilateurs de votes 
-** DONE Se connecter à l'API de google
-*** DONE Stocker le token de l'usager connecté dans la store
-*** DONE Obtenir les informations du compte Youtube connecté
-*** DONE Ajouter les informations de la chaine dans la Session
-*** DONE Afficher les informations du compte dans paramètres et en haut à droite
+* DONE Créer un bot compilateurs de votes 
 ** DONE Stocker le token du youtube et récupérer à l'ouverture de l'application
 *** Stocker après login
 *** Récupérer et valider après ouverture
-** DONE Écouter le chat youtube et afficher dans l'application (test)
-*** DONE Comment scrapper avec Casper.js (hack)
-*** DONE Sauvegarder les nouveau messages dans le store
-*** API youtube avec compte connecté
-**** Créer un liveStream
-**** Afficher le livestream dans la liste
-***** Rafraichir à toutes les X secondes pour voir si il y a un liveStream
+** DONE Écouter le chat youtube et afficher dans l'application
 **** Quand il y a un livestream, la vue passe au jeu
 ***** 3 États: 
 ****** Non débuté
@@ -45,7 +19,8 @@
 ******* Voir les trois gagants
 ******* Bouton pour commencer un nouveau concours
 ******* La liste en lecture seule
-** Fenêtre de concours
+*** DONE Sauvegarder les nouveau messages dans le store
+** DONE Fenêtre de concours
 *** Gérer l'état du concours
 **** Commencer le concours
 **** Terminer le concours
@@ -53,7 +28,6 @@
 *** Voir l'état du concours
 **** Débuté / Non débutté
 **** Si débutté: 
-***** Nom de l'admin qui a débuté le concours
 ***** Liste des résultats compilés
 **** Si terminé: 
 ***** Liste des gagnants
@@ -63,6 +37,19 @@
 *** Modifier les paramètres
 **** Modifier le message de Début / Fin de compilation (ou désactiver)
 **** Modifier le message d'annonce du gagnant 
+
+* Obtenir les données directement du simulateur
+  - Utiliser les données directement du plugin de landing rate de Dan Berry
+  - Le programme agit comme serveur pour recevoir les données sur un port:
+    - L'atterissage et la vitesse
+    - Le décolage (reset)
+** DONE Créer un serveur avec Express
+** Communiquer avec le jeu sur le processus principal avec le bus ipc
+*** Un évènement par route, géré dans game.js
+** Créer des routes pour les interventions du plugin
+*** Atterissage
+*** Reset
+** Permettre de configurer le port du serveur
 
 * Afficher directement dans la vidéo du stream (overlay)
 ** Hoster une application web sur un port de la machine

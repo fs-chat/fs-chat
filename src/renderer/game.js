@@ -1,9 +1,11 @@
+import { ipcRenderer } from 'electron'
+
 import store from './store'
 import YoutubeAPI from './youtube_api';
 
 let nextPageToken = null;
 
-export default {
+var Game = {
   init(liveChatId, token) {
     nextPageToken = null;
     store.commit('setLiveChatID', liveChatId);
@@ -92,5 +94,63 @@ export default {
   },
   stopGame() {
     store.commit('clearGame');
+  },
+  resultsToText() {
+    var results = store.state.results;
+    var rate = store.state.finalLandingRate;
+    if (results && rate) {
+      var winnerTextArr = [];
+      var medalEmojis = ['🥇','🥈','🥉'];
+      // var medalEmojis = [':first_place:',':second_place:',':third_place:']; /* ['🥇','🥈','🥉'] */
+      // var resultText = `Final landing rate: -${this.finalLandingRate} fpm`;
+
+      // Display util
+      function diffLanding (value, actual) {
+        var diff = value - actual;
+        if (diff == 0) return 'Exact value!';
+        else {
+          var diffFixed = (diff % 1 != 0) ? diff.toFixed(1) : diff;
+          return (diff>0) ? '+'+diffFixed : diffFixed;
+        }
+      }
+
+      for (var i = 0; (i < results.length && i < 3); i++) {
+        var result = results[i];
+        winnerTextArr.push(`${medalEmojis[i]} ${result.comment.authorDetails.displayName}, -${result.value} fpm `+
+          `(${diffLanding(result.value,rate)})`)
+      }
+
+      return winnerTextArr.join(' || ');
+    } else {
+      return '';
+    }
+  },
+  postResultsChat() {
+    var token = store.state.oauthElevatedToken;
+    var results = store.state.results;
+    var liveChatID = store.state.liveChatID;
+    if (token && results.length > 0 && liveChatID) {
+      YoutubeAPI.insertComment(token, liveChatID, Game.resultsToText()); 
+    }
   }
 };
+
+// (External endpoint) Reset results 
+// See: src/express/routes.js
+ipcRenderer.on('external-clear-results', function(event) {
+  console.log("rest");
+  Game.stopGame();
+});
+
+// (External endpoint) Set a final landing rate
+// See: src/express/routes.js
+ipcRenderer.on('external-compile-results', function(event, { rate }) {
+  console.log("Rate: " + rate);
+  if (!isNaN(parseFloat(rate)) && isFinite(rate)) {
+    Game.stopBets(rate);
+    Game.compileResults(rate);
+    Game.postResultsChat();
+  }
+});
+
+export default Game;

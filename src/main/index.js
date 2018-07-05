@@ -2,6 +2,8 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import path from 'path'
 
+import expressInit from '../express/server.js'
+
 import SETTINGS_DEV from '../settings/settings.dev.js'
 import SETTINGS_PROD from '../settings/settings.prod.js'
 
@@ -16,7 +18,8 @@ if (process.env.NODE_ENV !== 'development') {
   global.__settings = SETTINGS_DEV;
 }
 
-let mainWindow
+export var mainWindow;
+
 let willQuitApp = false;
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
@@ -51,8 +54,6 @@ function createWindow () {
     useContentSize: true,
     ...winSize
   })
-
-  app.setAppUserModelId("org.simulatedgreg.electron-vue");
 
   mainWindow.setMenu(null)
 
@@ -146,6 +147,9 @@ function createWindow () {
     chatWindow.loadURL(url);
     chatWindow.show();
   });
+
+  // TODO: Custom port
+  expressInit(mainWindow);
 }
 
 app.on('ready', createWindow)

@@ -33,7 +33,7 @@
                   <div v-if="bets.length > 0">
                     <div v-if="results.length > 0">
                       <!-- Game results  -->
-                      <textarea rows="2" id="final-results" class="form-control" v-model="finalResultText"></textarea>
+                      <textarea rows="2" id="final-results" class="form-control" v-model="resultsText"></textarea>
 
                       <!-- Button to clear/post results -->
                       <div class="form-group">
@@ -43,9 +43,9 @@
                         <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="copyResultTxt()">
                           Copy to clipboard
                         </button>
-                        <!-- <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="postResults()">
+                        <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="postResults()">
                           Post results
-                        </button> -->
+                        </button>
                       </div><br>
                     </div>
                     <div>
@@ -177,7 +177,10 @@ export default {
       'results',
       'finalLandingRate',
       'oauthElevatedToken'
-    ])
+    ]),
+    resultsText() {
+      return Game.resultsToText();
+    }
   },
   methods: {
     onSelectVideoUrl (request) {
@@ -218,21 +221,6 @@ export default {
       var answer = this.finalLandingRateField;
       if (!isNaN(parseFloat(answer)) && isFinite(answer)) {
         Game.compileResults(answer);
-
-        var winnerTextArr = [];
-        var medalEmojis = ['🥇','🥈','🥉'];
-
-        // https://r12a.github.io/app-conversion/
-        // var medalEmojis = ['\uD83E\uDD47','\uD83E\uDD47','\uD83E\uDD47'];
-        // var resultText = `Final landing rate: -${this.finalLandingRate} fpm`;
-
-        for (var i = 0; (i < this.results.length && i < 3); i++) {
-          var result = this.results[i];
-          winnerTextArr.push(`${medalEmojis[i]} ${result.comment.authorDetails.displayName}, -${result.value} fpm `+
-            `(${this.diffLanding(result.value,this.finalLandingRate)})`)
-        }
-
-        this.finalResultText = /*`(-${answer}) ` +*/ winnerTextArr.join(' || ');
       }
     },
     openCommentsModal (request) {
@@ -258,11 +246,8 @@ export default {
       document.execCommand('copy');
     },
     postResults (request) {
-      if (comfirm("Post results to chat?")) {
-        // if (this.finalResultText.length > 0) {
-        //   var token = this.$store.state.oauthElevatedToken;
-        //   YoutubeAPI.insertComment(token, this.$store.state.liveChatID, this.finalResultText); 
-        // }
+      if (confirm("Post results to chat?")) {
+        Game.postResultsChat();
       }
     },
     diffLanding (value, actual) {

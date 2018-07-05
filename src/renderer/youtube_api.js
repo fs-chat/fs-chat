@@ -60,6 +60,8 @@ export default {
     var auth = new OAuth2(global.__settings.clientId, global.__settings.clientSecret);
     auth.setCredentials(token);
 
+    console.log(messageText);
+
     service.liveChatMessages.insert({
       auth: auth,
       part: 'snippet',

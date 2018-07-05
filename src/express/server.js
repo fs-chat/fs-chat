@@ -1,37 +1,59 @@
 var express = require('express');
 var path = require('path');
-var logger = require('morgan');
-var createError = require('http-errors');
 
-var indexRouter = require('./routes');
-
-export default function () {
+export default function (mainWindow) {
 	var app = express();
 
-	// view engine setup
-	app.set('views', path.join(__dirname, 'views'));
-	app.set('view engine', 'jade');
+	// EXTERNAL ENDPOINT
+	// =============================================================================
 
-	app.use(logger('dev'));
-	app.use(express.urlencoded({ extended: false }));
+	// call the packages we need
+	var bodyParser = require('body-parser');
+	app.use(bodyParser.urlencoded({ extended: true }));
+	app.use(bodyParser.json());
 
-	app.use('/', indexRouter);
+	var port = 4500;        // set our port
 
-	// catch 404 and forward to error handler
-	app.use(function(req, res, next) {
-	  next(createError(404));
+	// ROUTES FOR OUR API
+	// =============================================================================
+	var router = express.Router(); 
+
+	/* API root */
+	router.get('/', function(req, res) {
+    res.json({ message: 'FS-Chat API root endpoint.' });   
 	});
 
-	// error handler
-	app.use(function(err, req, res, next) {
-	  // set locals, only providing error in development
-	  res.locals.message = err.message;
-	  res.locals.error = req.app.get('env') === 'development' ? err : {};
+	/**
+	 * External landing rate setter endpoint. (Dan Berry's landing rate plugin)
+	 * 
+	 * @param  {rate} rate  The value of the landing rate, or "reset"
+	 */
+	router.get('/lrate', function(req, res, next) {
+	  var rate = req.query.rate;
+	  if (!rate) {
+	  	// Rate should be set
+	  	res.sendStatus(400);
+	  } else {
+	  	// Clear results
+	  	if (rate == 'reset') {
+	  		mainWindow.webContents.send("external-clear-results");
+	  	}
+	  	// Set final landing rate
+	  	else {
+	  		// Send to mainWindow
+	  		mainWindow.webContents.send("external-compile-results", {
+	  			rate: rate
+	  		});
+	  	}
 
-	  // render the error page
-	  res.status(err.status || 500);
-	  res.render('error');
+	  	res.sendStatus(200);
+	  }
 	});
 
-	app.listen(4500);
+	// REGISTER OUR ROUTES -------------------------------
+	app.use('/', router);
+
+	// START THE SERVER
+	// =============================================================================
+	app.listen(port);
 }

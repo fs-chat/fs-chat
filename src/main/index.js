@@ -18,7 +18,8 @@ if (process.env.NODE_ENV !== 'development') {
   global.__settings = SETTINGS_DEV;
 }
 
-let mainWindow
+export var mainWindow;
+
 let willQuitApp = false;
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
@@ -53,8 +54,6 @@ function createWindow () {
     useContentSize: true,
     ...winSize
   })
-
-  app.setAppUserModelId("org.simulatedgreg.electron-vue");
 
   mainWindow.setMenu(null)
 
@@ -149,7 +148,8 @@ function createWindow () {
     chatWindow.show();
   });
 
-  expressInit();
+  // TODO: Custom port
+  expressInit(mainWindow);
 }
 
 app.on('ready', createWindow)

@@ -4,7 +4,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="header">
-            <h4 class="title">Contest status</h4>
+            <h4 class="title">Game status</h4>
             <p class="category">Information will show here about the state of the contest.</p>
 
             <div class="pull-right">
@@ -20,7 +20,7 @@
                   v-on:click.prevent="openCommentsModal()">  
                 <i class="fa fa-comments-o"></i>
               </a>
-              <router-link :to="{name:'LandingGameSettings'}" class="btn btn-simple btn-link btn-icon" tag="button">  
+              <router-link :to="{name:'LandingGameSettings'}" class="btn btn-simple btn-link btn-icon" tag="button" title="Game settings">  
                 <i class="fa fa-cog"></i>
               </router-link>
             </div>

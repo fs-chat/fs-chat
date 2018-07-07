@@ -33,6 +33,9 @@
                 <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="saveSettings()">
                   Save settings
                 </button>
+                <router-link :to="{name:'LandingGame'}" class="btn btn-default" tag="button">  
+                  Cancel
+                </router-link>
               </div>
             </div>
           </div>
@@ -60,7 +63,7 @@ export default {
     };
   },
   created: function() {
-    this.$store.commit('setTitle', "Landing rate game settings");
+    this.$store.commit('setTitle', "Landing rate betting game");
 
     this.settings = deepClone(this.$store.state.settings, {});
     this.game_settings = this.settings.game_settings;

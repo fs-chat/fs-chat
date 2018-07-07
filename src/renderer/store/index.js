@@ -71,10 +71,7 @@ export default new Vuex.Store({
         state.messages.push(messages[i]);
       }
     },
-    placeBet (state, { bet, deleteBetIndex }) {
-      if (typeof deleteBetIndex != 'undefined') {
-        Vue.delete(state.bets, deleteBetIndex);
-      }
+    placeBet (state, bet) {
       state.bets.push(bet);
     },
     deleteBet (state, indexDelete) {

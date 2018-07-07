@@ -80,7 +80,7 @@ var Game = {
           var message = comment.snippet.textMessageDetails.messageText;
 
           var placeBet = false;
-          var deleteBetIndex = false;
+          var deleteBetIndex = null;
           var existingBetIndex = store.state.bets.findIndex(bet => {
             return bet.comment.snippet.authorChannelId == comment.snippet.authorChannelId;
           });
@@ -102,12 +102,10 @@ var Game = {
             if (numberParse && message.length <= 20) {
               var numbers = numberParse.map(Number);
               if (numbers.length == 1 && !isNaN(numbers[0])) {
+                if (deleteBetIndex != null) store.commit('deleteBet', deleteBetIndex); 
                 store.commit('placeBet', {  
-                  deleteBetIndex: deleteBetIndex,
-                  bet: {
-                    value: numbers[0],
-                    comment: comment
-                  }
+                  value: numbers[0],
+                  comment: comment
                 });
               }
             }

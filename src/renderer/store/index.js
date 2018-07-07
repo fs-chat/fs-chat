@@ -4,6 +4,15 @@ import _ from 'underscore';
 import deepExtend from 'deep-extend';
 import storage from 'electron-json-storage'
 
+export const DEFAULT_SETTINGS = { 
+  streamVideoUrl: '',
+  gameSettings: {
+    game_mode: 'last_bet_overwrite',
+    minutes_before: 10
+  }
+};
+
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -11,6 +20,7 @@ export default new Vuex.Store({
   state: {
     // Variables
     title: "FS Chat",
+    settings: {},
 
     // Betting game
     streamVideoUrl: null,
@@ -44,6 +54,9 @@ export default new Vuex.Store({
       state.title = title;
     },
 
+    setSettings (state, settings) {
+      state.settings = settings;
+    },
     setLiveChatID (state, liveChatID) {
       state.liveChatID = liveChatID;
     },
@@ -124,11 +137,25 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    saveSettings ({ state }) {
+     getSettings ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        storage.set('settings', { 
+        storage.get('settings', function(error, settings) {
+          // Import and merge saved settings
+          var extendSettings = deepExtend(DEFAULT_SETTINGS, settings||{});
+          commit('setSettings', extendSettings);
+          commit('setStreamVideoUrl', extendSettings.streamVideoUrl);
+
+          resolve();
+        });
+      })
+    },
+    saveSettings ({ state, commit }) {
+      return new Promise((resolve, reject) => {
+        commit('setSettings', {
+          ...state.settings,
           streamVideoUrl: state.streamVideoUrl
-        }, function(error) {
+        });
+        storage.set('settings', state.settings, function(error) {
           if (error) reject();
           else resolve();
         });

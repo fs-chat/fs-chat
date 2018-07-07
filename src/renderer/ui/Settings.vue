@@ -39,7 +39,6 @@
 import { mapState } from 'vuex'
 import storage from 'electron-json-storage'
 import deepExtend from 'deep-extend'
-import { Session } from '../main'
 import { signOutGoogleApi } from '../auth'
 import { ipcRenderer, remote, shell } from 'electron'
 

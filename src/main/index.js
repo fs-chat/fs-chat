@@ -18,7 +18,7 @@ if (process.env.NODE_ENV !== 'development') {
   global.__settings = SETTINGS_DEV;
 }
 
-export var mainWindow;
+let mainWindow;
 
 let willQuitApp = false;
 const winURL = process.env.NODE_ENV === 'development'

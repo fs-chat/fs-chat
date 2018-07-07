@@ -3,6 +3,12 @@ import { ipcRenderer } from 'electron'
 import store from './store'
 import YoutubeAPI from './youtube_api';
 
+// Betting modes
+export const GAME_MODES = {
+  FIRST_BET_STANDING: 'first_bet_standing',
+  LAST_BET_OVERWRITE: 'last_bet_overwrite',
+};
+
 let nextPageToken = null;
 
 var Game = {

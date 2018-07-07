@@ -3,7 +3,7 @@
     <div v-if="loading">
       <div class="splash-screen">
         <div class="v-container">
-          <div class="v-center"><!-- <img src="~@/assets/grey.svg" alt="" class="logo"> --></div>
+          <div class="v-center">...</div>
         </div>
       </div>
     </div>
@@ -14,7 +14,8 @@
 </template>
 
 <script>
-  import { Session } from './main'
+  import deepExtend from 'deep-extend'
+  import storage from 'electron-json-storage'
 
  	import './assets/js/jquery-3.2.1.min.js';
   import './assets/js/bootstrap.min.js';
@@ -33,10 +34,11 @@
     mounted: function() {
       var self = this;
 
-      // TODO: Load initial settings
-
-      this.loading = false;
-      this.$router.push({ name: 'LandingGame' });
+      // Load initial settings
+      this.$store.dispatch('getSettings').then(() => {
+        self.loading = false;
+        self.$router.push({ name: 'LandingGame' });
+      });
     }
   }
 </script>

@@ -8,9 +8,6 @@
             <p class="category">Information will show here about the state of the contest.</p>
 
             <div class="pull-right">
-              <!-- <router-link to="/contest-parameters" class="btn btn-simple btn-link btn-icon" tag="button">  
-                <i class="fa fa-cog"></i>
-              </router-link> -->
               <a href="#" class="btn btn-simple btn-link btn-icon" tag="button" v-if="streamVideoId" title="Edit stream URL" 
                   v-on:click.prevent="clearChat()">  
                 <i class="fa fa-pencil-square-o"></i>
@@ -23,6 +20,9 @@
                   v-on:click.prevent="openCommentsModal()">  
                 <i class="fa fa-comments-o"></i>
               </a>
+              <router-link :to="{name:'LandingGameSettings'}" class="btn btn-simple btn-link btn-icon" tag="button">  
+                <i class="fa fa-cog"></i>
+              </router-link>
             </div>
           </div>
           <!-- Needs to be logged in to the API -->
@@ -155,11 +155,8 @@ export default {
     this.$store.commit('setTitle', "Landing rate betting game");
 
     // Get saved settings
-    storage.get('settings', function(error, settings) {
-      if (!error && settings) {
-        self.videoUrlField = settings.streamVideoUrl||'';
-      }
-    });
+    var videoURL = this.$store.state.settings.streamVideoUrl;
+    if (videoURL) self.videoUrlField = videoURL;
 
     var finalRate = this.$store.state.finalLandingRate;
     if (finalRate) {

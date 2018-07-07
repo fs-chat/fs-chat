@@ -15,6 +15,11 @@ export default new Router({
           component: require('@/ui/LandingGame').default,
         },
         {
+          path: 'landing-game-settings',
+          name: 'LandingGameSettings',
+          component: require('@/ui/LandingGameSettings').default,
+        },
+        {
           path: 'settings',
           name: 'Settings',
           component: require('@/ui/Settings').default,

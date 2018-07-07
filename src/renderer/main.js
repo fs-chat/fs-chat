@@ -27,12 +27,6 @@ if (process.env.NODE_ENV == 'development') {
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
-export const Session = {
-  oauthToken: null,
-  userId: null,
-  settings: {}
-};
-
 Vue.use(VeeValidate, {
   locale: "en"
 })

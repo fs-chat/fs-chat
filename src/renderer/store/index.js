@@ -4,10 +4,12 @@ import _ from 'underscore';
 import deepExtend from 'deep-extend';
 import storage from 'electron-json-storage'
 
+import { GAME_MODES } from '../game'
+
 export const DEFAULT_SETTINGS = { 
   streamVideoUrl: '',
-  gameSettings: {
-    game_mode: 'last_bet_overwrite',
+  game_settings: {
+    game_mode: GAME_MODES.LAST_BET_OVERWRITE,
     minutes_before: 10
   }
 };
@@ -26,7 +28,7 @@ export default new Vuex.Store({
     streamVideoUrl: null,
     streamVideoId: null,
     liveChatID: null,
-    registeringBets: false,
+    finalLandingTime: null,
     finalLandingRate: null,
     messages: [],
     bets: [],
@@ -66,19 +68,22 @@ export default new Vuex.Store({
     setStreamVideoId(state, streamVideoId) {
       state.streamVideoId = streamVideoId;
     },
-    setRegisteringBets (state, isRegistering) {
-      state.registeringBets = isRegistering;
-    },
     pushMessages (state, messages) {
       for (var i = 0; i < messages.length; i++) {
         state.messages.push(messages[i]);
       }
     },
-    placeBet (state, bet) {
+    placeBet (state, { bet, deleteBetIndex }) {
+      if (typeof deleteBetIndex != 'undefined') {
+        Vue.delete(state.bets, deleteBetIndex);
+      }
       state.bets.push(bet);
     },
     deleteBet (state, indexDelete) {
       Vue.delete(state.bets, indexDelete);
+    },
+    setFinalLandingTime (state, finalLandingTime) {
+      state.finalLandingTime = finalLandingTime;
     },
     setFinalLandingRate (state, finalLandingRate) {
       state.finalLandingRate = finalLandingRate;
@@ -87,9 +92,9 @@ export default new Vuex.Store({
       state.results = results;
     },
     clearGame (state) {
-      state.registeringBets = false;
       state.bets = [];
       state.results = [];
+      state.finalLandingTime = null;
       state.finalLandingRate = null;
     },
     clearStream (state) {
@@ -151,11 +156,10 @@ export default new Vuex.Store({
     },
     saveSettings ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        commit('setSettings', {
+        storage.set('settings', {
           ...state.settings,
           streamVideoUrl: state.streamVideoUrl
-        });
-        storage.set('settings', state.settings, function(error) {
+        }, function(error) {
           if (error) reject();
           else resolve();
         });

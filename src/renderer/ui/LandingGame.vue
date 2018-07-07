@@ -9,7 +9,7 @@
 
             <div class="pull-right">
               <a href="#" class="btn btn-simple btn-link btn-icon" tag="button" v-if="streamVideoId" title="Edit stream URL" 
-                  v-on:click.prevent="clearChat()">  
+                  v-on:click.prevent="editStreamUrl()">  
                 <i class="fa fa-pencil-square-o"></i>
               </a>
               <a href="#" class="btn btn-simple btn-link btn-icon" tag="button" v-if="streamVideoId" title="Open live stream in browser" 
@@ -29,87 +29,79 @@
           <div class="content" v-if="oauthElevatedToken">
             <div class="row">
               <div class="col-md-12" >
-                <div v-if="!registeringBets">
-                  <div v-if="bets.length > 0">
-                    <div v-if="results.length > 0">
-                      <!-- Game results  -->
-                      <textarea rows="2" id="final-results" class="form-control" v-model="resultsText"></textarea>
-
-                      <!-- Button to clear/post results -->
-                      <div class="form-group">
-                        <button type="submit" class="btn btn-danger btn-fill" v-on:click.prevent="clearResults()">
-                          Clear results
-                        </button>
-                        <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="copyResultTxt()">
-                          Copy to clipboard
-                        </button>
-                        <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="postResults()">
-                          Post results
-                        </button>
-                      </div><br>
-                    </div>
-                    <div>
-                      <div class="form-group">
-                        <label>Final landing rate (actual value)</label>
-                        <input type="text" class="form-control" v-model="finalLandingRateField">
-                      </div>
-                      <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="compileResults()">
-                          <span>Compile results</span>
-                        </button>
-                        <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="startBets()">
-                          Re-open bets
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div v-else>
-                    <div v-if="liveChatID">
-                      <div class="form-group">
-                        <!-- Button to start registering bets (before landing) -->
-                        <button class="btn btn-success btn-fill" v-on:click.prevent="startBets()">
-                          Start registering bets
-                        </button>
-                      </div>
-                    </div>
-                    <div v-if="!liveChatID">
-                      <div class="form-group">
-                        <label>Paste the full video URL (or Youtube gaming)</label>
-                        <input type="text" class="form-control" placeholder="https://www.youtube.com/watch?v=[...]" v-model="videoUrlField">
-                        <div v-bind:class="{ 'invalid-feedback': urlErrorMsg, 'valid-feedback': !urlErrorMsg }" v-if="urlErrorMsg">{{ urlErrorMsg }}</div>
-                      </div>
-                      <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="onSelectVideoUrl()">
-                          Select this stream
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div v-if="registeringBets">
-                  <!-- Button stop bets (after landing) -->
+                <!-- No stream selected -->
+                <div v-if="!liveChatID">
                   <div class="form-group">
-                    <button class="btn btn-default btn-fill" v-on:click.prevent="stopBets()">
-                      Stop registering bets
+                    <label>Paste the full video URL (or Youtube gaming)</label>
+                    <input type="text" class="form-control" placeholder="https://www.youtube.com/watch?v=[...]" v-model="videoUrlField">
+                    <div v-bind:class="{ 'invalid-feedback': urlErrorMsg, 'valid-feedback': !urlErrorMsg }" v-if="urlErrorMsg">{{ urlErrorMsg }}</div>
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="onSelectVideoUrl()">
+                      Select this stream
                     </button>
                   </div>
                 </div>
-
-                <div v-if="registeringBets || bets.length > 0">
-                  <div v-if="bets.length > 0">
-                    <!-- List of bets -->
-                    <ul class="list-group landing-bets-list">
-                      <li class="list-group-item d-flex justify-content-between align-items-center" v-for="(bet, index) in bets"
-                          v-on:click.prevent="deleteBet(bet,index)">
-                        <img :src="bet.comment.authorDetails.profileImageUrl" alt="" class="profile-image">
-                        <span class="profile-name">{{ bet.comment.authorDetails.displayName }}</span>
-                        <span class="badge badge-secondary badge-pill rate-badge">- {{ bet.value }}</span>
-                      </li>
-                    </ul>
+                <!-- Chat ID set, game started -->
+                <div v-else>
+                  <!-- Before landing -->
+                  <div v-if="!finalLandingTime">
+                    <!-- Button stop bets (very close to landing) -->
+                    <div class="form-group">
+                      <button class="btn btn-default btn-fill" v-on:click.prevent="setLandingTimeNow()">
+                        Stop registering bets
+                      </button>
+                    </div>
                   </div>
-                  <div v-else>
-                    Collecting bets, none to show yet...
+                  
+                  <!-- After landing -->
+                  <div v-if="finalLandingTime">
+                    <div v-if="bets.length > 0">
+                      <div v-if="results.length > 0">
+                        <!-- Game results  -->
+                        <textarea rows="2" id="final-results" class="form-control" v-model="resultsText"></textarea>
+
+                        <!-- Button to clear/post results -->
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-danger btn-fill" v-on:click.prevent="clearResults()">
+                            Clear results
+                          </button>
+                          <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="copyResultTxt()">
+                            Copy to clipboard
+                          </button>
+                          <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="postResults()">
+                            Post results
+                          </button>
+                        </div><br>
+                      </div>
+                      <div>
+                        <div class="form-group">
+                          <label>Final landing rate (actual value)</label>
+                          <input type="text" class="form-control" v-model="finalLandingRateField">
+                        </div>
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="compileResults()">
+                            <span>Compile results</span>
+                          </button>
+                          <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="unsetLandingTime()">
+                            Re-open bets
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- List of bets un-ordred bets -->
+                      <ul class="list-group landing-bets-list">
+                        <li class="list-group-item d-flex justify-content-between align-items-center" v-for="(bet, index) in bets"
+                            v-on:click.prevent="deleteBet(bet,index)">
+                          <img :src="bet.comment.authorDetails.profileImageUrl" alt="" class="profile-image">
+                          <span class="profile-name">{{ bet.comment.authorDetails.displayName }}</span>
+                          <span class="badge badge-secondary badge-pill rate-badge">- {{ bet.value }}</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div v-else>
+                      <i>There were bets no in the last few minutes, <a href="#" v-on:click.prevent="unsetLandingTime()">click here to reset</a>.</i>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -163,15 +155,16 @@ export default {
       this.finalLandingRateField = finalRate;
       this.compileResults();
     }
+
   },
   computed: {
     ...mapState([
       'title',
       'liveChatID',
       'streamVideoId',
-      'registeringBets',
       'bets',
       'results',
+      'finalLandingTime',
       'finalLandingRate',
       'oauthElevatedToken'
     ]),
@@ -203,16 +196,17 @@ export default {
         self.urlErrorMsg = "Invalid video url format."
       }
     },
-    startBets (request) {
-      Game.startBets();
-    },
     deleteBet (bet, index) {
       if (confirm('You are about to delete ' + bet.comment.authorDetails.displayName+"'s bet. Are you sure?")) {
         this.$store.commit('deleteBet', index);
       }
     },
-    stopBets (request) {
-      Game.stopBets();
+    setLandingTimeNow (request) {
+      Game.setLandingTime(new Date());
+    },
+    unsetLandingTime (request) {
+      Game.resetGame();
+      this.finalLandingRateField = '';
     },
     compileResults (request) {
       var answer = this.finalLandingRateField;
@@ -244,7 +238,7 @@ export default {
     },
     postResults (request) {
       if (confirm("Post results to chat?")) {
-        Game.postResultsChat();
+        Game.postResultsChat(this.$store.state.oauthElevatedToken);
       }
     },
     diffLanding (value, actual) {
@@ -257,15 +251,21 @@ export default {
     },
     clearResults (request) {
       if (confirm("Clearing results, Are-you sure?")) {
-        Game.stopGame();
+        Game.resetGame();
       }
     },
-    clearChat (request) {
+    editStreamUrl (request) {
       if (confirm("Changing the stream url will clear current data. Are-you sure?")) {
-        Game.stopGame();
+        Game.resetGame();
         this.$store.commit('clearStream');
       }
     },
+  },
+  watch: {
+    // External value change
+    finalLandingRate(value) {
+      this.finalLandingRateField = value;
+    }
   }
 };
 </script>

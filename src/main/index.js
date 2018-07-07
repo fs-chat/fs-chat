@@ -139,7 +139,7 @@ function createWindow () {
       width: 600,
       height: 800,
       webPreferences: {
-        devTools : true,
+        devTools : false,
         nodeIntegration: false
       }
     };

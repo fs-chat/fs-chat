@@ -6,8 +6,8 @@ import YoutubeAPI from './youtube_api';
 
 // Betting modes
 export const GAME_MODES = {
-  FIRST_BET_STANDING: 'first_bet_standing',
   LAST_BET_OVERWRITE: 'last_bet_overwrite',
+  FIRST_BET_STANDING: 'first_bet_standing'
 };
 
 let nextPageToken = null;
@@ -122,8 +122,13 @@ var Game = {
    * @param  {String} landingRate 
    */
   compileResults(landingRate) {
-    var rate = Math.abs(landingRate);
+    var gameSettings = store.state.settings.game_settings;
     var betsCopy = JSON.parse(JSON.stringify(store.state.bets));
+    
+    var rate = Math.abs(landingRate);
+    if (gameSettings.rounded_rate) {
+      rate = Math.round(rate);
+    }
 
     var sorted = betsCopy.map(bet => {
       bet.diff = Math.abs(bet.value - rate);

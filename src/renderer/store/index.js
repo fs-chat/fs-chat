@@ -4,16 +4,14 @@ import _ from 'underscore';
 import deepExtend from 'deep-extend';
 import storage from 'electron-json-storage'
 
-import { GAME_MODES } from '../game'
-
 export const DEFAULT_SETTINGS = { 
   streamVideoUrl: '',
   game_settings: {
-    game_mode: GAME_MODES.LAST_BET_OVERWRITE,
-    minutes_before: 10
+    game_mode: 'last_bet_overwrite',
+    minutes_before: 10,
+    rounded_rate: false
   }
 };
-
 
 Vue.use(Vuex)
 

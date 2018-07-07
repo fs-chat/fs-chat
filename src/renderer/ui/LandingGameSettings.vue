@@ -22,6 +22,14 @@
                   <input type="number" class="form-control" v-model="game_settings.minutes_before">
                 </div>
 
+                <div class="form-group">
+                  <label>Rounded final rate value?</label><br>
+                  <label class="switch">
+                    <input type="checkbox" v-model="game_settings.rounded_rate">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+
                 <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="saveSettings()">
                   Save settings
                 </button>
@@ -46,7 +54,8 @@ export default {
       game_modes: [],
       game_settings: {
         minutes_before: '',
-        game_mode: ''
+        game_mode: '',
+        rounded_rate: false
       }
     };
   },

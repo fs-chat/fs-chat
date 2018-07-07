@@ -30,7 +30,7 @@ var Game = {
       }
     }
     
-    function fetchcomments() {
+    function fetchNewComments() {
       if (liveChatId == store.state.liveChatID) {
         YoutubeAPI.getNewComments(token, liveChatId, nextPageToken, (res) => {
           // Update next page token
@@ -41,12 +41,12 @@ var Game = {
 
           // Wait till API is ready to receive next call..
           console.log('Timeout: ' + res.pollingIntervalMillis);
-          setTimeout(fetchcomments, res.pollingIntervalMillis);
+          setTimeout(fetchNewComments, res.pollingIntervalMillis);
         });
       }
     }
 
-    fetchcomments();
+    fetchNewComments();
   },
   /**
    * Set the landing time and update the "bets" list with the messages that date max X (settings.minutes_before)
@@ -153,7 +153,7 @@ var Game = {
       var medalEmojis = ['🥇','🥈','🥉'];
 
       // Display util
-      function diffLanding (value, actual) {
+      function diffText (value, actual) {
         var diff = value - actual;
         if (diff == 0) return 'Exact value!';
         else {
@@ -162,10 +162,21 @@ var Game = {
         }
       }
 
+      // Flags to handle equal rank
+      var lastMedal = null;
+      var lastDiff = null;
+
       for (var i = 0; (i < results.length && i < 3); i++) {
         var result = results[i];
-        winnerTextArr.push(`${medalEmojis[i]} ${result.comment.authorDetails.displayName}, -${result.value} fpm `+
-          `(${diffLanding(result.value,rate)})`)
+        var medal = medalEmojis[i];
+        var diffValue = Math.abs(result.value - rate).toFixed(1);
+
+        if (diffValue == lastDiff) medal = lastMedal;
+        winnerTextArr.push(`${medal} ${result.comment.authorDetails.displayName}, -${result.value} fpm `+
+          `(${diffText(result.value, rate)})`)
+
+        lastMedal = medal;
+        lastDiff = diffValue;
       }
 
       return winnerTextArr.join(' || ');

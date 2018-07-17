@@ -12,14 +12,16 @@
                 <div class="form-group">
                   <label>Game mode</label>
                   <select class="form-control" v-model="game_settings.game_mode">
-                    <option value="last_bet_overwrite">Overwrite last bet</option>
-                    <option value="first_bet_standing">First bet standing</option>
+                    <option value="last_bet_overwrite">Each bet replaces the last</option>
+                    <option value="first_bet_standing">First bet is the standing bet </option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label>Minutes before landing to accept votes</label>
-                  <input type="number" class="form-control" v-model="game_settings.minutes_before">
+                  <input type="number" class="form-control" v-model="game_settings.minutes_before"
+                    v-validate="'required'" name="minutes_before" data-vv-as="Minutes">
+                    <span v-show="errors.has('minutes_before')" class="validation-error">{{ errors.first('minutes_before') }}</span>
                 </div>
 
                 <div class="form-group">
@@ -30,12 +32,14 @@
                   </label>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="saveSettings()">
-                  Save settings
-                </button>
-                <router-link :to="{name:'LandingGame'}" class="btn btn-default" tag="button">  
-                  Cancel
-                </router-link>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="saveSettings()">
+                    Save settings
+                  </button>
+                  <router-link :to="{name:'LandingGame'}" class="btn btn-default" tag="button">  
+                    Cancel
+                  </router-link>
+                </div>
               </div>
             </div>
           </div>
@@ -70,21 +74,26 @@ export default {
   },
   methods: {
     saveSettings(e) {
-      this.settings.game_settings = this.game_settings;
+      var self = this;
+      this.$validator.validateAll().then((result) => {
+        if(result) {
+          self.settings.game_settings = self.game_settings;
 
-      // Sauvegarder les parametres dans un fichier local
-      this.$store.commit('setSettings', deepExtend(deepClone(this.$store.state.settings), {
-        game_settings: this.game_settings
-      }));
+          // Sauvegarder les parametres dans un fichier local
+          self.$store.commit('setSettings', deepExtend(deepClone(self.$store.state.settings), {
+            game_settings: self.game_settings
+          }));
 
-      this.$store.dispatch('saveSettings').then(() => {
-        $.notify({
-          icon: "pe-7s-edit",
-          message: "Settings saved."
-        });
+          self.$store.dispatch('saveSettings').then(() => {
+            $.notify({
+              icon: "pe-7s-edit",
+              message: "Settings saved."
+            });
+          });
+
+          self.$router.push({ name: 'LandingGame' });
+        }
       });
-
-      this.$router.push({ name: 'LandingGame' });
     }
   }
 };

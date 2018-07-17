@@ -143,6 +143,16 @@
     color: red;
 }
 
+.validation-error {
+  display: block;
+  color: red;
+  margin-top: 8px;
+}
+
+.form-group {
+  margin-bottom: 11px;
+}
+
 @media all and (max-width: 991px)  {
     .sidebar .nav > li.active-pro{
         position: initial;

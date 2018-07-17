@@ -22,9 +22,11 @@
                 <div v-else>
                   <label>Account information</label>
                   <p>Your account is not currently associated.</b></p>
-                  <button type="submit" class="btn btn-success btn-fill" v-on:click.prevent="login()">
-                    Sign in with Google
-                  </button>
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-fill" v-on:click.prevent="login()">
+                      Sign in with Google
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

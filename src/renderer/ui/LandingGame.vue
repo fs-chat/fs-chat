@@ -49,7 +49,7 @@
                     <!-- Button stop bets (very close to landing) -->
                     <div class="form-group">
                       <button class="btn btn-default btn-fill" v-on:click.prevent="setLandingTimeNow()">
-                        Stop registering bets
+                        Get bets for the last {{ settings.game_settings.minutes_before }} minutes
                       </button>
                     </div>
                   </div>
@@ -100,7 +100,8 @@
                       </ul>
                     </div>
                     <div v-else>
-                      <i>There were bets no in the last few minutes, <a href="#" v-on:click.prevent="unsetLandingTime()">click here to reset</a>.</i>
+                      <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes, 
+                        <a href="#" v-on:click.prevent="unsetLandingTime()">click here to reset</a>.</i>
                     </div>
                   </div>
                 </div>
@@ -166,7 +167,8 @@ export default {
       'results',
       'finalLandingTime',
       'finalLandingRate',
-      'oauthElevatedToken'
+      'oauthElevatedToken',
+      'settings'
     ]),
     resultsText() {
       return Game.resultsToText();

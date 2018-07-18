@@ -15,7 +15,7 @@ export let menu = remote.Menu.buildFromTemplate([
     }
   },
   {
-    label: 'Quitter',
+    label: 'Quit',
     click () {
       remote.app.quit();
     }

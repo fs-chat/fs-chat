@@ -252,9 +252,7 @@ export default {
       }
     },
     clearResults (request) {
-      if (confirm("Clearing results, Are-you sure?")) {
-        Game.resetGame();
-      }
+      Game.resetGame();
     },
     editStreamUrl (request) {
       if (confirm("Changing the stream url will clear current data. Are-you sure?")) {

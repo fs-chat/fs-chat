@@ -3,14 +3,13 @@ import { remote } from 'electron'
 import path from 'path'
 
  /**
-  * Construction du menu dans la bare des tâches.
+  * Tray icon handlers
   */ 
 export let tray = new remote.Tray(path.join(__static, '/tray.ico'))
 export let menu = remote.Menu.buildFromTemplate([
   {
     label: 'Debug',
     click () {
-      // Send event to Vue
       var window = remote.getCurrentWindow();
       window.webContents.toggleDevTools();
     }

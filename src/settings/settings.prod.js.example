@@ -3,7 +3,7 @@ export default {
   "clientId" : "CLIENT_ID",
   "clientSecret" : "CLIENT_SECRET",
   
-  "uniqueBets" : true,
+  "multipleBets" : true,
   "show_debug" : false,
   "prevent_close" : true,
   "window_settings": {

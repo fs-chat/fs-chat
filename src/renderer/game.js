@@ -85,7 +85,9 @@ var Game = {
             return bet.comment.snippet.authorChannelId == comment.snippet.authorChannelId;
           });
 
-          if (gameMode == GAME_MODES.LAST_BET_OVERWRITE) {
+          if (global.__settings.multipleBets == true) {
+            placeBet = true;
+          } else if (gameMode == GAME_MODES.LAST_BET_OVERWRITE) {
             if (existingBetIndex != -1) {
               // Delete current bet for user
               deleteBetIndex = existingBetIndex;
@@ -200,14 +202,14 @@ var Game = {
 };
 
 // (External endpoint) Reset results 
-// See: src/express/routes.js
+// See: src/express/server.js
 ipcRenderer.on('external-clear-results', function(event) {
   console.log("Rate: Reset");
   Game.resetGame();
 });
 
 // (External endpoint) Set a final landing rate
-// See: src/express/routes.js
+// See: src/express/server.js
 ipcRenderer.on('external-compile-results', function(event, { rate }) {
   console.log("Rate: " + rate);
   var token = store.state.oauthElevatedToken;

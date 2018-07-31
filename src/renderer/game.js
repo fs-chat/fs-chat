@@ -40,7 +40,7 @@ var Game = {
           processcomments(res.items);
 
           // Wait till API is ready to receive next call..
-          console.log('Timeout: ' + res.pollingIntervalMillis);
+          // console.log('Timeout: ' + res.pollingIntervalMillis);
           setTimeout(fetchNewComments, res.pollingIntervalMillis);
         });
       }
@@ -128,6 +128,8 @@ var Game = {
     var rate = Math.abs(landingRate);
     if (gameSettings.rounded_rate) {
       rate = Math.round(rate);
+    } else {
+      rate = rate.toFixed(2);
     }
 
     var sorted = betsCopy.map(bet => {
@@ -154,7 +156,7 @@ var Game = {
     var results = store.state.results;
     var rate = store.state.finalLandingRate;
     if (results && rate) {
-      var winnerTextArr = [];
+      var winnerTextArr = [`FINAL RATE -${rate} FPM`];
       var medalEmojis = ['🥇','🥈','🥉'];
 
       // Display util

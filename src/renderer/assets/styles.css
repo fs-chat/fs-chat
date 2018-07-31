@@ -373,3 +373,15 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+@media (max-width: 991px) {
+  .main-panel .navbar {
+    left: 0px;
+  }
+  .main-panel > .content {
+    left: 0px;
+  }
+  .nav-mobile-menu {
+    display: none;
+  }
+}

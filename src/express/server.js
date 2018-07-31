@@ -28,7 +28,7 @@ export default function (mainWindow) {
 	 * 
 	 * @param  {rate} rate  The value of the landing rate, or "reset"
 	 */
-	router.get('/lrate', function(req, res, next) {
+	router.post('/lrate', function(req, res, next) {
 	  var rate = req.query.rate;
 	  if (!rate) {
 	  	// Rate should be set

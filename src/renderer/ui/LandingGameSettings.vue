@@ -19,9 +19,23 @@
 
                 <div class="form-group">
                   <label>Minutes before landing to accept votes</label>
+
+                  <div class="input-group">
                   <input type="number" class="form-control" v-model="game_settings.minutes_before"
                     v-validate="'required'" name="minutes_before" data-vv-as="Minutes">
+                    <span class="input-group-addon">minutes</span>
                     <span v-show="errors.has('minutes_before')" class="validation-error">{{ errors.first('minutes_before') }}</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Stream delay in seconds</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" v-model="game_settings.stream_delay_sec"
+                    v-validate="'required'" name="stream_delay_sec" data-vv-as="Stream delay">
+                    <span class="input-group-addon">seconds</span>
+                    <span v-show="errors.has('stream_delay_sec')" class="validation-error">{{ errors.first('stream_delay_sec') }}</span>                    
+                  </div>
                 </div>
 
                 <div class="form-group">

@@ -100,8 +100,16 @@
                       </ul>
                     </div>
                     <div v-else>
-                      <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes, 
-                        <a href="#" v-on:click.prevent="unsetLandingTime()">click here to reset</a>.</i>
+                      <div class="form-group">
+                        <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes or since the last reset time.</i>
+                          <a href="#" v-if="resetTime" v-on:click.prevent="clearResetTime()">Click here to disregard reset time.</a><br>
+                      </div>
+
+                      <div class="form-group">
+                        <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="unsetLandingTime()">
+                          Go back
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -168,6 +176,7 @@ export default {
       'finalLandingTime',
       'finalLandingRate',
       'oauthElevatedToken',
+      'resetTime',
       'settings'
     ]),
     resultsText() {
@@ -253,6 +262,10 @@ export default {
     },
     clearResults (request) {
       Game.resetGame();
+    },
+    clearResetTime (request) {
+      this.$store.commit('clearResetTime');
+      this.setLandingTimeNow();
     },
     editStreamUrl (request) {
       if (confirm("Changing the stream url will clear current data. Are-you sure?")) {

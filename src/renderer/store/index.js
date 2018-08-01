@@ -9,6 +9,7 @@ export const DEFAULT_SETTINGS = {
   game_settings: {
     game_mode: 'last_bet_overwrite',
     minutes_before: 10,
+    stream_delay_sec: 15,
     rounded_rate: false
   }
 };
@@ -28,6 +29,7 @@ export default new Vuex.Store({
     liveChatID: null,
     finalLandingTime: null,
     finalLandingRate: null,
+    resetTime: null,
     messages: [],
     bets: [],
     results: [],
@@ -87,6 +89,10 @@ export default new Vuex.Store({
       state.results = results;
     },
     clearGame (state) {
+      // Set the "reset" timestamp, this is to avoid
+      // keeping the results of a previous landing, go around
+      state.resetTime = new Date();
+
       state.bets = [];
       state.results = [];
       state.finalLandingTime = null;
@@ -96,6 +102,9 @@ export default new Vuex.Store({
       state.liveChatID = null;
       state.streamVideoId = null;
       state.messages = [];
+    },
+    clearResetTime (state) {
+      state.resetTime = null;
     },
 
 

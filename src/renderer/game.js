@@ -55,6 +55,12 @@ var Game = {
    */
   setLandingTime(time) {
     if (time) {
+      // Make a copy of the previous reset time
+      var momentReset = null;
+      if (store.state.resetTime) { 
+        momentReset = moment(store.state.resetTime);
+      }
+
       store.commit('clearGame');
       store.commit('setFinalLandingTime', time);
 
@@ -69,13 +75,16 @@ var Game = {
       var comments = store.state.messages;
       for (var i = 0; i < comments.length; i++) {
         var comment = comments[i];
+        var momentPublishedAt = moment(comment.snippet.publishedAt);
 
-        // Verify time constraint
-        var diffMinutes = Math.abs(moment(comment.snippet.publishedAt).diff(momentLanding, 'minutes'));
+        var isAfterReset = (!momentReset || momentPublishedAt.isAfter(momentReset));
+
+        // Verify time constraint in minutes before landing
+        var diffMinutes = Math.abs(momentPublishedAt.diff(momentLanding, 'minutes'));
         // console.log({diffMinutes, max: minutesSetting, valid: (diffMinutes < minutesSetting)});
 
         // Check time validity before landing
-        if (diffMinutes < minutesSetting) {
+        if (isAfterReset && diffMinutes < minutesSetting) {
           var channelId = comment.snippet.authorChannelId;
           var message = comment.snippet.textMessageDetails.messageText;
 
@@ -218,7 +227,16 @@ ipcRenderer.on('external-compile-results', function(event, { rate }) {
   if (token && !isNaN(parseFloat(rate)) && isFinite(rate)) {
     Game.setLandingTime(new Date());
     Game.compileResults(rate);
-    Game.postResultsChat(token);
+
+    // Post results to chat but wait for stream delay
+    var gameSettings = store.state.settings.game_settings;
+    var secondsDelay = gameSettings.stream_delay_sec || 15;
+    console.log("Wait " + secondsDelay + " seconds and post results...");
+
+    setTimeout(function () {
+      console.log("=> Post results");
+      Game.postResultsChat(token);
+    }, (secondsDelay * 1000));
   }
 });
 

@@ -374,6 +374,10 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+.input-group-addon {
+    background-color: #efefef;
+}    
+
 @media (max-width: 991px) {
   .main-panel .navbar {
     left: 0px;

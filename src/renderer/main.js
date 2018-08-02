@@ -18,11 +18,22 @@ import storage from 'electron-json-storage'
 
 import VeeValidate from 'vee-validate';
 
+console.logs = []; // Logging util
+
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 if (process.env.NODE_ENV == 'development') {
   global.__settings = require('../settings/settings.dev.js').default;
 } else {
   global.__settings = require('../settings/settings.prod.js').default;
+  // Production logging utils
+  console.stdlog = console.log.bind(console);
+  console.log = function(){
+    console.logs.push({
+      time: moment().toString(),
+      log: Array.from(arguments)
+    });
+    console.stdlog.apply(console, arguments);
+  }
 }
 
 Updates.listenForUpdates();
@@ -61,17 +72,6 @@ mainWindow.onbeforeunload = (e) => {
     mainWindow.tray.destroy();
   }
 };
-
-// Logging utils
-console.stdlog = console.log.bind(console);
-console.logs = [];
-console.log = function(){
-  console.logs.push({
-    time: moment().toString(),
-    log: Array.from(arguments)
-  });
-  console.stdlog.apply(console, arguments);
-}
 
 /* eslint-disable no-new */
 export default new Vue({

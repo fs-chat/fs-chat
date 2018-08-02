@@ -24,6 +24,7 @@ export default new Vuex.Store({
     settings: {},
 
     // Betting game
+    streamChannelUrl: null,
     streamVideoUrl: null,
     streamVideoId: null,
     liveChatID: null,
@@ -72,6 +73,9 @@ export default new Vuex.Store({
     },
     setStreamVideoUrl(state, streamVideoUrl) {
       state.streamVideoUrl = streamVideoUrl;
+    },
+    setStreamChannelUrl(state, streamChannelUrl) {
+      state.streamChannelUrl = streamChannelUrl;
     },
     setStreamVideoId(state, streamVideoId) {
       state.streamVideoId = streamVideoId;
@@ -177,7 +181,7 @@ export default new Vuex.Store({
           // Import and merge saved settings
           var extendSettings = deepExtend(DEFAULT_SETTINGS, settings||{});
           commit('setSettings', extendSettings);
-          commit('setStreamVideoUrl', extendSettings.streamVideoUrl);
+          commit('setStreamChannelUrl', extendSettings.streamChannelUrl);
 
           resolve();
         });
@@ -187,7 +191,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         storage.set('settings', {
           ...state.settings,
-          streamVideoUrl: state.streamVideoUrl
+          streamChannelUrl: state.streamChannelUrl
         }, function(error) {
           if (error) reject();
           else resolve();

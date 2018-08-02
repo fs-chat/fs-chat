@@ -14,7 +14,7 @@
         <ul class="nav navbar-nav navbar-right">
           <!-- Change icon color when there is an update -->
           <li class="">
-            <router-link to="/about" title="À propos" v-bind:class="{ 'has-update': hasUpdate }">  
+            <router-link to="/about" title="About" v-bind:class="{ 'has-update': hasUpdate }">  
               <i class="fa fa-info-circle"></i> <p class="hidden-lg hidden-md"></p>
             </router-link>
           </li>

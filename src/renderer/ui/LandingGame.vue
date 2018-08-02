@@ -8,7 +8,7 @@
             <p class="category">Information will show here about the state of the contest.</p>
 
             <div class="pull-right">
-              <a href="#" class="btn btn-simple btn-link btn-icon" tag="button" v-if="streamVideoId" title="Edit stream URL" 
+              <a href="#" class="btn btn-simple btn-link btn-icon" tag="button" v-if="streamVideoId" title="Edit channel URL" 
                   v-on:click.prevent="editStreamUrl()">  
                 <i class="fa fa-pencil-square-o"></i>
               </a>
@@ -32,13 +32,13 @@
                 <!-- No stream selected -->
                 <div v-if="!liveChatID">
                   <div class="form-group">
-                    <label>Paste the full video URL (or Youtube gaming)</label>
-                    <input type="text" class="form-control" placeholder="https://www.youtube.com/watch?v=[...]" v-model="videoUrlField">
+                    <label>Paste the full channel URL (or video URL)</label>
+                    <input type="text" class="form-control" placeholder="https://www.youtube.com/channel/[...]" v-model="channelUrlField">
                     <div v-bind:class="{ 'invalid-feedback': urlErrorMsg, 'valid-feedback': !urlErrorMsg }" v-if="urlErrorMsg">{{ urlErrorMsg }}</div>
                   </div>
                   <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="onSelectVideoUrl()">
-                      Select this stream
+                    <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="onSelectChannelUrl()">
+                      Select this channel
                     </button>
                   </div>
                 </div>
@@ -100,14 +100,17 @@
                       </ul>
                     </div>
                     <div v-else>
-                      <div class="form-group">
-                        <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes or since the last reset time.</i>
-                          <a href="#" v-if="resetIndex" v-on:click.prevent="clearResetIndex()">Click here to disregard reset time.</a><br>
+                      <div class="form-group" v-if="resetIndex">
+                        <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes or since the last landing.</i>
+                          <a href="#" v-on:click.prevent="clearResetIndex()">Click here to disregard reset time.</a><br>
+                      </div>
+                      <div class="form-group" v-else>
+                        <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes.</i>
                       </div>
 
                       <div class="form-group">
                         <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="unsetLandingTime()">
-                          Go back
+                          Click here to back
                         </button>
                       </div>
                     </div>
@@ -147,7 +150,7 @@ export default {
       finalLandingRateField: '',
       finalResultText: '',
 
-      videoUrlField: '',
+      channelUrlField: '',
       urlErrorMsg: ''
     };
   },
@@ -156,8 +159,8 @@ export default {
     this.$store.commit('setTitle', "Landing rate betting game");
 
     // Get saved settings
-    var videoURL = this.$store.state.settings.streamVideoUrl;
-    if (videoURL) self.videoUrlField = videoURL;
+    var channelUrl = this.$store.state.settings.streamChannelUrl;
+    if (channelUrl) self.channelUrlField = channelUrl;
 
     var finalRate = this.$store.state.finalLandingRate;
     if (finalRate) {
@@ -184,27 +187,43 @@ export default {
     }
   },
   methods: {
-    onSelectVideoUrl (request) {
+    onSelectChannelUrl (request) {
       var self = this;
       self.urlErrorMsg = null;
-      var parsedUrl = url.parse(this.videoUrlField, true);
+      var parsedUrl = url.parse(this.channelUrlField, true);
+      var channelId = null;
+      var videoId = null;
 
-      if (parsedUrl.query.v) {
-        var videoId = parsedUrl.query.v;
-        var token = this.$store.state.oauthElevatedToken;
-        YoutubeAPI.getLiveChatId(token, videoId, (err, liveChatID) => {
-          if (err) {
-            self.urlErrorMsg = err;
-          } else {
-            // Start listening for chat
-            Game.init(liveChatID, token);
-            self.$store.commit("setStreamVideoId", videoId);
-            self.$store.commit("setStreamVideoUrl", this.videoUrlField);
-            self.$store.dispatch("saveSettings");
-          }
-        });
+      var splitPath = parsedUrl.pathname.split('/');
+      if (splitPath.length > 0) {
+        var channelIndex = splitPath.indexOf('channel');
+        if (channelIndex != -1 && (splitPath.length > channelIndex + 1)) {
+          channelId = splitPath[channelIndex + 1];
+          console.log("Channel ID parsed: " + channelId);
+        }
+      }
+
+      var token = this.$store.state.oauthElevatedToken;
+      var onResponse = function (err, videoId, liveChatID) {
+        if (err) {
+          self.urlErrorMsg = err;
+        } else {
+          // Start listening for chat
+          Game.init(liveChatID, token);
+          self.$store.commit("setStreamVideoId", videoId);
+          self.$store.commit("setStreamChannelUrl", self.channelUrlField);
+          self.$store.dispatch("saveSettings");
+        }
+      }
+
+      if (channelId) {
+        // Find active live stream and chat for this channel
+        YoutubeAPI.getLiveChatId(token, channelId, null, onResponse);
+      } else if (parsedUrl.query.v) {
+        // Alternatively use a video URL
+        YoutubeAPI.getLiveChatId(token, null, parsedUrl.query.v, onResponse);
       } else {
-        self.urlErrorMsg = "Invalid video url format."
+        self.urlErrorMsg = "Invalid channel or video URL format."
       }
     },
     deleteBet (bet, index) {
@@ -268,7 +287,7 @@ export default {
       this.setLandingTimeNow();
     },
     editStreamUrl (request) {
-      if (confirm("Changing the stream url will clear current data. Are-you sure?")) {
+      if (confirm("Changing the channel url will clear current data. Are-you sure?")) {
         Game.resetGame();
         this.$store.commit('clearStream');
       }

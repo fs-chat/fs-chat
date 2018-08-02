@@ -5,12 +5,15 @@ import deepExtend from 'deep-extend';
 import storage from 'electron-json-storage'
 
 export const DEFAULT_SETTINGS = { 
-  streamVideoUrl: '',
+  streamChannelUrl: '',
   game_settings: {
     game_mode: 'last_bet_overwrite',
     minutes_before: 10,
     stream_delay_sec: 15,
-    rounded_rate: false
+    rounded_rate: false,
+    vote_end_messages: [
+      'EVERYONE: Voting for the landing rate has been closed. Good luck!'
+    ]
   }
 };
 

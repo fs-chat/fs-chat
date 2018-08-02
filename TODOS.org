@@ -1,12 +1,13 @@
 
 # Bot de compilation des résultats pour le pour le landing rate (CptCanada Youtube)
 
-* DOING Modifier le fonctionnement du reset pour utiliser le dernier index au lieu d'une timestamp
+* DONE Modifier le fonctionnement du reset pour utiliser le dernier index au lieu d'une timestamp
   - La comparaison de dates semble entrainer des problèmes (voit seulment deux votes au lieu de 30..)
-* TODO Self-Update
+* DONE Self-Update
 ** Trouver un empalcement sur un serveur quelconque
-* TODO Permettre d'envoyer un rapport de logs (toute la console) par courriel
+* DONE Permettre d'envoyer un rapport de logs (toute la console) par courriel
 ** TODO Ajouter des timestamps pour les éléments importants (pour pouvoir comparer)
+* DONE Permettre l'ajout et la modification du message d'arrêt des votes.
 
 * DONE Créer un bot compilateurs de votes 
 ** DONE Stocker le token du youtube et récupérer à l'ouverture de l'application

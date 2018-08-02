@@ -100,7 +100,7 @@
                       </ul>
                     </div>
                     <div v-else>
-                      <div class="form-group" v-if="resetIndex">
+                      <div class="form-group" v-if="resetIndex != 0">
                         <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes or since the last landing.</i>
                           <a href="#" v-on:click.prevent="clearResetIndex()">Click here to disregard reset time.</a><br>
                       </div>

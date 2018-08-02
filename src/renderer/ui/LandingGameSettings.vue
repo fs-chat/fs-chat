@@ -39,6 +39,24 @@
                 </div>
 
                 <div class="form-group">
+                  <label>Vote ending messages <a href="#" v-on:click.prevent="addEndMessage()">(Add)</a></label>
+                  <div class="input-group vote-ending-messages">
+                    <table class="table table-bordered"> 
+                      <tbody> 
+                        <tr v-for="(message, i) in game_settings.vote_end_messages"> 
+                          <td><input type="text" class="form-control" v-model="game_settings.vote_end_messages[i]"></td>
+                          <td width="78px;" class="text-center">
+                            <a href="#" v-on:click.prevent="deleteEndMessage(i)">Delete</a>
+                          </td>
+                        </tr> 
+                      </tbody>
+                    </table>
+                    <div class="invalid-feedback" v-if="endMessagesError">{{ endMessagesError }}</div>
+                    <i v-show="game_settings.vote_end_messages.length == 0">Add at least one message to enable this feature.</i>     
+                  </div>
+                </div>
+
+                <div class="form-group">
                   <label>Rounded final rate value?</label><br>
                   <label class="switch">
                     <input type="checkbox" v-model="game_settings.rounded_rate">
@@ -75,9 +93,13 @@ export default {
       game_modes: [],
       game_settings: {
         minutes_before: '',
+        stream_delay_sec: '',
+        vote_end_messages: [],
         game_mode: '',
         rounded_rate: false
-      }
+      },
+      // Errors
+      endMessagesError: null
     };
   },
   created: function() {
@@ -87,10 +109,28 @@ export default {
     this.game_settings = this.settings.game_settings;
   },
   methods: {
+    addEndMessage() {
+      this.game_settings.vote_end_messages.push('');
+      setTimeout(function() {$('.vote-ending-messages input').last().focus();}, 50);
+    },
+    deleteEndMessage(index) {
+      this.game_settings.vote_end_messages.splice(index, 1);
+    },
     saveSettings(e) {
       var self = this;
+      self.endMessagesError = "";
+
       this.$validator.validateAll().then((result) => {
         if(result) {
+          // Validate vote ending messages
+          var messages = self.game_settings.vote_end_messages;
+          for (var i=0; i < messages.length; i++) {
+            var message = messages[i];
+            if (message.length == 0) {
+              return self.endMessagesError = "Empty messages aren't allowed.";
+            }
+          }
+
           self.settings.game_settings = self.game_settings;
 
           // Sauvegarder les parametres dans un fichier local

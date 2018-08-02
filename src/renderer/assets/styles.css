@@ -378,6 +378,22 @@ input:checked + .slider:before {
     background-color: #efefef;
 }    
 
+.vote-ending-messages,
+.vote-ending-messages table {
+  width: 100%;
+}
+
+.vote-ending-messages input {
+  border: 0 !important;
+}
+.vote-ending-messages td {
+  padding: 0 !important;
+}
+.vote-ending-messages a {
+  color: red;
+  text-decoration: underline;
+}
+
 @media (max-width: 991px) {
   .main-panel .navbar {
     left: 0px;

@@ -58,7 +58,6 @@ var Game = {
       // Make a copy of the previous reset index
       // The reset index is the index of the next comment to start from
       var resetIndex = store.state.resetIndex;
-      console.log(resetIndex);
 
       store.commit('clearGame');
       store.commit('setFinalLandingTime', time);
@@ -117,6 +116,21 @@ var Game = {
                 });
               }
             }
+          }
+        }
+      }
+
+      // Notifiy chat that the voting game has ended
+      if (store.state.bets.length > 0) {
+        var endMessages = gameSettings.vote_end_messages;
+        // Has to be at least one message to enable the feature
+        if (endMessages && endMessages.length > 0) {
+          var message = endMessages[Math.floor(Math.random()*endMessages.length)];
+          var token = store.state.oauthElevatedToken;
+          var liveChatID = store.state.liveChatID;
+
+          if (token && liveChatID) {
+            YoutubeAPI.insertComment(token, liveChatID, message); 
           }
         }
       }

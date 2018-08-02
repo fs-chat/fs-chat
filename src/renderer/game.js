@@ -55,11 +55,10 @@ var Game = {
    */
   setLandingTime(time) {
     if (time) {
-      // Make a copy of the previous reset time
-      var momentReset = null;
-      if (store.state.resetTime) { 
-        momentReset = moment(store.state.resetTime);
-      }
+      // Make a copy of the previous reset index
+      // The reset index is the index of the last comment when previous landing was calculated
+      var resetIndex = store.state.resetIndex;
+      console.log(resetIndex);
 
       store.commit('clearGame');
       store.commit('setFinalLandingTime', time);
@@ -73,18 +72,16 @@ var Game = {
 
       // Get valid bets for the last (minutes_before) minutes
       var comments = store.state.messages;
-      for (var i = 0; i < comments.length; i++) {
+      for (var i = resetIndex; i < comments.length; i++) {
         var comment = comments[i];
         var momentPublishedAt = moment(comment.snippet.publishedAt);
-
-        var isAfterReset = (!momentReset || momentPublishedAt.isAfter(momentReset));
 
         // Verify time constraint in minutes before landing
         var diffMinutes = Math.abs(momentPublishedAt.diff(momentLanding, 'minutes'));
         // console.log({diffMinutes, max: minutesSetting, valid: (diffMinutes < minutesSetting)});
 
         // Check time validity before landing
-        if (isAfterReset && diffMinutes < minutesSetting) {
+        if (diffMinutes < minutesSetting) {
           var channelId = comment.snippet.authorChannelId;
           var message = comment.snippet.textMessageDetails.messageText;
 

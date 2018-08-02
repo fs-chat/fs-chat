@@ -29,7 +29,7 @@ export default new Vuex.Store({
     liveChatID: null,
     finalLandingTime: null,
     finalLandingRate: null,
-    resetTime: null,
+    resetIndex: 0,
     messages: [],
     bets: [],
     results: [],
@@ -39,7 +39,15 @@ export default new Vuex.Store({
     oauthElevatedToken: null,
     elevatedChannelInfo: null,
     oauthReadOnlyToken: null,
-    readOnlyChannelInfo: null
+    readOnlyChannelInfo: null,
+
+    // Update info
+    updateStatusText: "",
+    updateNotificationSent: false,
+    updateSkipConfirm: false,
+    updateAvailable: null,
+    updateDownloaded: false,
+    updateDownloading: false,
   },
   getters: {
     getObj: ( state ) => ( collection, id ) => {
@@ -89,9 +97,8 @@ export default new Vuex.Store({
       state.results = results;
     },
     clearGame (state) {
-      // Set the "reset" timestamp, this is to avoid
-      // keeping the results of a previous landing, go around
-      state.resetTime = new Date();
+      // Set the reset index to avoid old messages on next calculation
+      state.resetIndex = state.messages.length;
 
       state.bets = [];
       state.results = [];
@@ -103,10 +110,9 @@ export default new Vuex.Store({
       state.streamVideoId = null;
       state.messages = [];
     },
-    clearResetTime (state) {
-      state.resetTime = null;
+    clearResetIndex (state) {
+      state.resetIndex = 0;
     },
-
 
     setLoginOption (state, loginOption) {
       state.loginOption = loginOption;
@@ -124,6 +130,25 @@ export default new Vuex.Store({
     },
     setReadOnlyChannelInfo (state, info) {
       state.readOnlyChannelInfo = info;
+    },
+
+    setUpdateDownloading (state, status) {
+      state.updateDownloading = status;
+    },
+    setUpdateStatusText (state, status) {
+      state.updateStatusText = status;
+    },
+    setUpdateAvailable (state, updateInfo) {
+      state.updateAvailable = updateInfo;
+    },
+    setUpdateNotificationSent (state, isSent) {
+      state.updateNotificationSent = isSent;
+    },
+    setUpdateSkipConfirm (state, isSkip) {
+      state.updateSkipConfirm = isSkip;
+    },
+    setUpdateDownloaded (state, isDownloaded) {
+      state.updateDownloaded = isDownloaded;
     },
 
     updateObj (state, {collection, obj}) {

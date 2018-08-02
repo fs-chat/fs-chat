@@ -102,7 +102,7 @@
                     <div v-else>
                       <div class="form-group">
                         <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes or since the last reset time.</i>
-                          <a href="#" v-if="resetTime" v-on:click.prevent="clearResetTime()">Click here to disregard reset time.</a><br>
+                          <a href="#" v-if="resetIndex" v-on:click.prevent="clearResetIndex()">Click here to disregard reset time.</a><br>
                       </div>
 
                       <div class="form-group">
@@ -176,7 +176,7 @@ export default {
       'finalLandingTime',
       'finalLandingRate',
       'oauthElevatedToken',
-      'resetTime',
+      'resetIndex',
       'settings'
     ]),
     resultsText() {
@@ -263,8 +263,8 @@ export default {
     clearResults (request) {
       Game.resetGame();
     },
-    clearResetTime (request) {
-      this.$store.commit('clearResetTime');
+    clearResetIndex (request) {
+      this.$store.commit('clearResetIndex');
       this.setLandingTimeNow();
     },
     editStreamUrl (request) {

@@ -48,7 +48,7 @@
       "icon": "build/icons/icon.ico",
       "publish": {
         "provider": "generic",
-        "url": ""
+        "url": "https://fs-chat.github.io/fs-chat.github.io"
       }
     },
     "linux": {

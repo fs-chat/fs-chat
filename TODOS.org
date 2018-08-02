@@ -1,6 +1,13 @@
 
 # Bot de compilation des résultats pour le pour le landing rate (CptCanada Youtube)
 
+* DOING Modifier le fonctionnement du reset pour utiliser le dernier index au lieu d'une timestamp
+  - La comparaison de dates semble entrainer des problèmes (voit seulment deux votes au lieu de 30..)
+* TODO Self-Update
+** Trouver un empalcement sur un serveur quelconque
+* TODO Permettre d'envoyer un rapport de logs (toute la console) par courriel
+** TODO Ajouter des timestamps pour les éléments importants (pour pouvoir comparer)
+
 * DONE Créer un bot compilateurs de votes 
 ** DONE Stocker le token du youtube et récupérer à l'ouverture de l'application
 *** Stocker après login
@@ -37,32 +44,15 @@
 *** Modifier les paramètres
 **** Modifier le message de Début / Fin de compilation (ou désactiver)
 **** Modifier le message d'annonce du gagnant 
-
-* Obtenir les données directement du simulateur
+* DONE Obtenir les données directement du simulateur
   - Utiliser les données directement du plugin de landing rate de Dan Berry
   - Le programme agit comme serveur pour recevoir les données sur un port:
     - L'atterissage et la vitesse
     - Le décolage (reset)
 ** DONE Créer un serveur avec Express
-** Communiquer avec le jeu sur le processus principal avec le bus ipc
+** DONE Communiquer avec le jeu sur le processus principal avec le bus ipc
 *** Un évènement par route, géré dans game.js
-** Créer des routes pour les interventions du plugin
+** DONE Créer des routes pour les interventions du plugin
 *** Atterissage
 *** Reset
-** Permettre de configurer le port du serveur
 
-* Afficher directement dans la vidéo du stream (overlay)
-** Hoster une application web sur un port de la machine
-   - Pour permettre au streamer de créer un widget dans OBS
-   - L'application va hoster une application sur HTTP
-   - Cette application HTTP aura un lien socket.io avec l'application
-**** Pouvoir customizer le style du message
-*** Lancer un serveur HTTP
-*** Ouvrir le lien vers l'URL dans le navigateur
-*** Envoyer des messages avec socket.io vers cette application
-** Modifier l'overlay
-*** Activer / Désactiver / Ouvrir dans le navigateur
-*** Modifier le Style CSS et le gabarit HTML
-
-
-* DONE Créer une application (Electron-Vue)

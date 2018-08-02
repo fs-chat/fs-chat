@@ -56,7 +56,7 @@ var Game = {
   setLandingTime(time) {
     if (time) {
       // Make a copy of the previous reset index
-      // The reset index is the index of the last comment when previous landing was calculated
+      // The reset index is the index of the next comment to start from
       var resetIndex = store.state.resetIndex;
       console.log(resetIndex);
 

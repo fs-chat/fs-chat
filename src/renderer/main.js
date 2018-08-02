@@ -9,6 +9,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import { ipcRenderer, remote } from 'electron'
+import Updates from './updates'
 
 import { tray } from './tray'
 import { signInGoogleApi, AUTH_TYPE,
@@ -23,6 +24,8 @@ if (process.env.NODE_ENV == 'development') {
 } else {
   global.__settings = require('../settings/settings.prod.js').default;
 }
+
+Updates.listenForUpdates();
 
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
@@ -58,6 +61,17 @@ mainWindow.onbeforeunload = (e) => {
     mainWindow.tray.destroy();
   }
 };
+
+// Logging utils
+console.stdlog = console.log.bind(console);
+console.logs = [];
+console.log = function(){
+  console.logs.push({
+    time: moment().toString(),
+    log: Array.from(arguments)
+  });
+  console.stdlog.apply(console, arguments);
+}
 
 /* eslint-disable no-new */
 export default new Vue({

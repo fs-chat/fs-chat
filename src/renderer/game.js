@@ -52,14 +52,15 @@ var Game = {
    * Set the landing time and update the "bets" list with the messages that date max X (settings.minutes_before)
    * 
    * @param {String} time     Date object, or null to reset
+   * @param {String} reset    Wether we set a reset index or not
    */
-  setLandingTime(time) {
+  setLandingTime(time, reset=true) {
     if (time) {
       // Make a copy of the previous reset index
       // The reset index is the index of the next comment to start from
       var resetIndex = store.state.resetIndex;
 
-      store.commit('clearGame');
+      store.commit('clearGame', reset);
       store.commit('setFinalLandingTime', time);
 
       var gameSettings = store.state.settings.game_settings;
@@ -158,13 +159,15 @@ var Game = {
     });
 
     store.commit('setFinalLandingRate', rate);
+    store.commit('setResetIndex', store.state.messages.length);
     store.commit('setResults', sorted);
   },
   /*
    * Reset results 
+   * @param {String} reset    Wether we set a reset index or not
    */
-  resetGame() {
-    store.commit('clearGame');
+  resetGame(reset=true) {
+    store.commit('clearGame', reset);
   },
   /**
    * Get a reprensation of the winners to post in chat.

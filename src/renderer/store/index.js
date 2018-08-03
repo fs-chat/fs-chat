@@ -30,6 +30,7 @@ export default new Vuex.Store({
     streamChannelUrl: null,
     streamVideoUrl: null,
     streamVideoId: null,
+    streamTitle: null,
     liveChatID: null,
     finalLandingTime: null,
     finalLandingRate: null,
@@ -83,6 +84,9 @@ export default new Vuex.Store({
     setStreamVideoId(state, streamVideoId) {
       state.streamVideoId = streamVideoId;
     },
+    setStreamTitle(state, streamTitle) {
+      state.streamTitle = streamTitle;
+    },
     pushMessages (state, messages) {
       for (var i = 0; i < messages.length; i++) {
         state.messages.push(messages[i]);
@@ -103,9 +107,10 @@ export default new Vuex.Store({
     setResults (state, results) {
       state.results = results;
     },
-    clearGame (state) {
+    clearGame (state, reset=true) {
       // Set the reset index to avoid old messages on next calculation
-      state.resetIndex = state.messages.length;
+      console.log(reset);
+      if (reset) state.resetIndex = state.messages.length;
 
       state.bets = [];
       state.results = [];
@@ -116,6 +121,9 @@ export default new Vuex.Store({
       state.liveChatID = null;
       state.streamVideoId = null;
       state.messages = [];
+    },
+    setResetIndex (state, resetIndex) {
+      state.resetIndex = resetIndex;
     },
     clearResetIndex (state) {
       state.resetIndex = 0;

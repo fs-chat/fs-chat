@@ -2,12 +2,17 @@
 export default {
   "clientId" : "CLIENT_ID",
   "clientSecret" : "CLIENT_SECRET",
+
+  "smtpHost" : "SMTP_HOST",
+  "smtpLogin" : "SMTP_USER",
+  "smtpPassword" : "SMTP_PASSWORD",
   
-  "multipleBets" : false,
+  "multipleBets" : true,
   "show_debug" : true,
   "prevent_close" : false,
   "window_settings": {
     "width": 1700,
+    "minWidth": 1700,
     "height": 700
   }
 }

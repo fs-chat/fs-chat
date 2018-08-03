@@ -48,6 +48,10 @@
                   <div v-if="!finalLandingTime">
                     <!-- Button stop bets (very close to landing) -->
                     <div class="form-group">
+                      <b>Current Stream: </b> {{ streamTitle }}
+                    </div>
+
+                    <div class="form-group">
                       <button class="btn btn-default btn-fill" v-on:click.prevent="setLandingTimeNow()">
                         Get bets for the last {{ settings.game_settings.minutes_before }} minutes
                       </button>
@@ -110,7 +114,7 @@
 
                       <div class="form-group">
                         <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="unsetLandingTime()">
-                          Click here to back
+                          Click here to go back
                         </button>
                       </div>
                     </div>
@@ -173,6 +177,7 @@ export default {
     ...mapState([
       'title',
       'liveChatID',
+      'streamTitle',
       'streamVideoId',
       'bets',
       'results',
@@ -204,12 +209,13 @@ export default {
       }
 
       var token = this.$store.state.oauthElevatedToken;
-      var onResponse = function (err, videoId, liveChatID) {
+      var onResponse = function (err, videoId, liveChatID, videoTitle) {
         if (err) {
           self.urlErrorMsg = err;
         } else {
           // Start listening for chat
           Game.init(liveChatID, token);
+          self.$store.commit("setStreamTitle", videoTitle);
           self.$store.commit("setStreamVideoId", videoId);
           self.$store.commit("setStreamChannelUrl", self.channelUrlField);
           self.$store.dispatch("saveSettings");
@@ -232,10 +238,10 @@ export default {
       }
     },
     setLandingTimeNow (request) {
-      Game.setLandingTime(new Date());
+      Game.setLandingTime(new Date(), false);
     },
     unsetLandingTime (request) {
-      Game.resetGame();
+      Game.resetGame(false);
       this.finalLandingRateField = '';
     },
     compileResults (request) {

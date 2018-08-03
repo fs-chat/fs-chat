@@ -24,7 +24,9 @@ export default {
           if (!video.liveStreamingDetails || !video.liveStreamingDetails.activeLiveChatId) {
             if (callback) callback('No active live chat found for the live broadcast.');
           } else {
-            if (callback) callback(null, id, video.liveStreamingDetails.activeLiveChatId);
+            if (callback) callback(null, id, 
+              video.liveStreamingDetails.activeLiveChatId,
+              video.snippet.title);
           }
         } else {
           if (callback) callback('Could not retreive live broadcast information.');
@@ -53,7 +55,7 @@ export default {
           console.log("Live stream video ID found: " + broadcastId);
           onVideoIdFound(broadcastId);
         } else {
-          if (callback) callback('No live broadcast found for this channel.');
+          if (callback) callback('No live broadcast found for this channel. (You may wait at least 2 min after stream started)');
         }
       });
     } else {

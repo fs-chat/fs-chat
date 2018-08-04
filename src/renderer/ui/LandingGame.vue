@@ -32,7 +32,8 @@
                 <!-- No stream selected -->
                 <div v-if="!liveChatID">
                   <div class="form-group">
-                    <label>Paste the full channel URL (or video URL)</label>
+                    <label>Paste the full channel or video URL 
+                      <a href="#" v-on:click.prevent="useOwnChannelUrl()">(Use own channel)</a></label>
                     <input type="text" class="form-control" placeholder="https://www.youtube.com/channel/[...]" v-model="channelUrlField">
                     <div v-bind:class="{ 'invalid-feedback': urlErrorMsg, 'valid-feedback': !urlErrorMsg }" v-if="urlErrorMsg">{{ urlErrorMsg }}</div>
                   </div>
@@ -199,7 +200,7 @@ export default {
     }
   },
   methods: {
-    onSelectChannelUrl (request) {
+    onSelectChannelUrl () {
       var self = this;
       self.urlErrorMsg = null;
       var parsedUrl = url.parse(this.channelUrlField, true);
@@ -239,25 +240,30 @@ export default {
         self.urlErrorMsg = "Invalid channel or video URL format."
       }
     },
+    useOwnChannelUrl () {
+      var channelInfo = this.$store.state.elevatedChannelInfo;
+      this.channelUrlField = `https://www.youtube.com/channel/${channelInfo.id}`;
+      this.onSelectChannelUrl();
+    },
     deleteBet (bet, index) {
       if (confirm('You are about to delete ' + bet.comment.authorDetails.displayName+"'s bet. Are you sure?")) {
         this.$store.commit('deleteBet', index);
       }
     },
-    setLandingTimeNow (request) {
+    setLandingTimeNow () {
       Game.setLandingTime(new Date(), false);
     },
-    unsetLandingTime (request) {
+    unsetLandingTime () {
       Game.resetGame(false);
       this.finalLandingRateField = '';
     },
-    compileResults (request) {
+    compileResults () {
       var answer = this.finalLandingRateField;
       if (!isNaN(parseFloat(answer)) && isFinite(answer)) {
         Game.compileResults(answer);
       }
     },
-    openCommentsModal (request) {
+    openCommentsModal () {
       var streamVideoId = this.$store.state.streamVideoId;
       if (streamVideoId) {
         var liveChatUrl = `https://www.youtube.com/live_chat?v=${streamVideoId}&is_popout=1`;
@@ -268,18 +274,18 @@ export default {
         });
       }
     },
-    openVideoUrl (request) {
+    openVideoUrl () {
       var streamVideoId = this.$store.state.streamVideoId;
       if (streamVideoId) {
         var url = `https://www.youtube.com/watch?v=${streamVideoId}`;
         shell.openExternal(url);
       }
     },
-    copyResultTxt (request) {
+    copyResultTxt () {
       $("#final-results").select();
       document.execCommand('copy');
     },
-    postResults (request) {
+    postResults () {
       if (confirm("Post results to chat?")) {
         Game.postResultsChat(this.$store.state.oauthElevatedToken);
       }
@@ -292,14 +298,14 @@ export default {
         return (diff>0) ? '+'+diffFixed : diffFixed;
       }
     },
-    clearResults (request) {
+    clearResults () {
       Game.resetGame();
     },
-    clearResetIndex (request) {
+    clearResetIndex () {
       this.$store.commit('clearResetIndex');
       this.setLandingTimeNow();
     },
-    editStreamUrl (request) {
+    editStreamUrl () {
       if (confirm("Changing the channel url will clear current data. Are-you sure?")) {
         Game.resetGame();
         this.$store.commit('clearStream');

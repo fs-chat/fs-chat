@@ -223,35 +223,46 @@ var Game = {
     if (token && results.length > 0 && liveChatID) {
       YoutubeAPI.insertComment(token, liveChatID, Game.resultsToText()); 
     }
+  },
+  /**
+   * Create listeners for external API (Dan Berry's plugin)
+   */
+  createEndpointListeners() {
+    // (External endpoint) Reset results 
+    // See: src/express/server.js
+    ipcRenderer.on('external-clear-results', function(event) {
+      console.log("Rate: Reset");
+      Game.resetGame();
+    });
+
+    // (External endpoint) Set a final landing rate
+    // See: src/express/server.js
+    ipcRenderer.on('external-compile-results', function(event, { rate }) {
+      console.log("Rate: " + rate);
+      var token = store.state.oauthElevatedToken;
+      var liveChatID = store.state.liveChatID;
+      if (token && liveChatID && !isNaN(parseFloat(rate)) && isFinite(rate)) {
+        Game.setLandingTime(new Date());
+        Game.compileResults(rate);
+
+        if (store.state.results.length > 0) {
+          var resultText = Game.resultsToText();
+
+          // Post results to chat but wait for stream delay
+          var gameSettings = store.state.settings.game_settings;
+          var secondsDelay = gameSettings.stream_delay_sec || 15;
+          console.log("Wait " + secondsDelay + " seconds and post results...");
+
+          setTimeout(function () {
+            console.log("=> Post results");
+            YoutubeAPI.insertComment(token, liveChatID, resultText); 
+          }, (secondsDelay * 1000));
+        } else {
+          console.log("No results to show.");
+        }
+      }
+    });
   }
 };
-
-// (External endpoint) Reset results 
-// See: src/express/server.js
-ipcRenderer.on('external-clear-results', function(event) {
-  console.log("Rate: Reset");
-  Game.resetGame();
-});
-
-// (External endpoint) Set a final landing rate
-// See: src/express/server.js
-ipcRenderer.on('external-compile-results', function(event, { rate }) {
-  console.log("Rate: " + rate);
-  var token = store.state.oauthElevatedToken;
-  if (token && !isNaN(parseFloat(rate)) && isFinite(rate)) {
-    Game.setLandingTime(new Date());
-    Game.compileResults(rate);
-
-    // Post results to chat but wait for stream delay
-    var gameSettings = store.state.settings.game_settings;
-    var secondsDelay = gameSettings.stream_delay_sec || 15;
-    console.log("Wait " + secondsDelay + " seconds and post results...");
-
-    setTimeout(function () {
-      console.log("=> Post results");
-      Game.postResultsChat(token);
-    }, (secondsDelay * 1000));
-  }
-});
 
 export default Game;

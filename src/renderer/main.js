@@ -10,6 +10,7 @@ import router from './router'
 import store from './store'
 import { ipcRenderer, remote } from 'electron'
 import Updates from './updates'
+import Game from './game'
 
 import { tray } from './tray'
 import { signInGoogleApi, AUTH_TYPE,
@@ -63,6 +64,9 @@ ipcRenderer.on('login-google-result', function(event, data) {
 
 // Resume last session
 importTokenStorage();
+
+// Init Event listeners for external API
+Game.createEndpointListeners();
 
 var mainWindow = remote.getCurrentWindow();
 mainWindow.tray = tray;

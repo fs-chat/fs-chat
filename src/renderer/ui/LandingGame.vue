@@ -52,8 +52,9 @@
                     </div>
 
                     <div class="form-group">
-                      <button class="btn btn-default btn-fill" v-on:click.prevent="setLandingTimeNow()">
-                        Get bets for the last {{ settings.game_settings.minutes_before }} minutes
+                      <button class="btn btn-danger btn-fill btn-stop-bets" v-on:click.prevent="setLandingTimeNow()"
+                          data-toggle="tooltip" data-placement="right" title="This is done automatically by   Dan Berry's plugin">
+                        Stop accepting bets
                       </button>
                     </div>
                   </div>
@@ -157,6 +158,12 @@ export default {
       channelUrlField: '',
       urlErrorMsg: ''
     };
+  },
+  mounted: function() {
+    $('body').tooltip({
+      selector: '.btn-stop-bets',
+      delay: 0
+    });
   },
   created: function() {
     var self = this;

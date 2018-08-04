@@ -109,7 +109,6 @@ export default new Vuex.Store({
     },
     clearGame (state, reset=true) {
       // Set the reset index to avoid old messages on next calculation
-      console.log(reset);
       if (reset) state.resetIndex = state.messages.length;
 
       state.bets = [];

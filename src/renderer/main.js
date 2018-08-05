@@ -13,6 +13,7 @@ import Updates from './updates'
 import Game from './game'
 
 import { tray } from './tray'
+import { initDatabase } from './database'
 import { signInGoogleApi, AUTH_TYPE,
   importTokenStorage } from './auth'
 import storage from 'electron-json-storage'
@@ -68,9 +69,12 @@ importTokenStorage();
 // Init Event listeners for external API
 Game.createEndpointListeners();
 
+// Init local database
+initDatabase();
+
+// Tray destroy handler
 var mainWindow = remote.getCurrentWindow();
 mainWindow.tray = tray;
-
 mainWindow.onbeforeunload = (e) => {
   if (mainWindow.tray) {
     mainWindow.tray.destroy();

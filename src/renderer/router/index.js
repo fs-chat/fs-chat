@@ -20,6 +20,11 @@ export default new Router({
           component: require('@/ui/LandingGameSettings').default,
         },
         {
+          path: 'Leaderboard',
+          name: 'Leaderboard',
+          component: require('@/ui/Leaderboard').default,
+        },
+        {
           path: 'settings',
           name: 'Settings',
           component: require('@/ui/Settings').default,

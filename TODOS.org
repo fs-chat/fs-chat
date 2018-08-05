@@ -1,5 +1,30 @@
-
 # Bot de compilation des résultats pour le pour le landing rate (CptCanada Youtube)
+
+* Créer une page Leaderboard
+** Phase d'expérimentation
+*** Installer LokiJS pour faire de la persistence de données indexés NoSql 
+*** Données de test l'affichage/sauvegarde/restauration
+**** À chaque fois qu'on appuit sur le bouton (récupérer)
+***** On sauvegarde les commentaires depuit le dernier index dans une table "chat-test"
+***** On met à jour les informations du leaderboard avec les statistiques suivantes
+****** Le nombre de fois que l'usager a écrit dans le chat
+****** Une médaille (aléatoire)
+**** Les informations sont persistentes entre les sessions
+***** Les données sont stockés de preference dans le dossier appdata, comme storage
+** Information dans le tableau final
+*** Rang
+**** Tri: Croissant/décroissant
+*** Nom et photo
+*** Nombre de participations
+**** Tri: Croissant/décroissant
+*** Différence moyenne
+**** Tri: Croissant/décroissant
+*** Médailles (un emoji par médaille gagnée)
+**** Tri: Chaque médaille a un poids, trier par la somme du poid des médailles
+***** Or: 5.5
+***** Argent: 2.5
+***** Bronze: 1
+
 
 * DONE Modifier le fonctionnement du reset pour utiliser le dernier index au lieu d'une timestamp
   - La comparaison de dates semble entrainer des problèmes (voit seulment deux votes au lieu de 30..)
@@ -8,7 +33,6 @@
 * DONE Permettre d'envoyer un rapport de logs (toute la console) par courriel
 ** TODO Ajouter des timestamps pour les éléments importants (pour pouvoir comparer)
 * DONE Permettre l'ajout et la modification du message d'arrêt des votes.
-
 * DONE Créer un bot compilateurs de votes 
 ** DONE Stocker le token du youtube et récupérer à l'ouverture de l'application
 *** Stocker après login

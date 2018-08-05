@@ -39,6 +39,14 @@ export default new Vuex.Store({
     bets: [],
     results: [],
 
+    // Leaderboard
+    leaderboardData: [],
+    latestLeaderboardIndex: 0,
+    leaderboardSort: 'nbComments',
+
+    // Local Database adapter
+    databaseLoaded: false,
+
     // Google API
     loginOption: null,
     oauthElevatedToken: null,
@@ -126,6 +134,10 @@ export default new Vuex.Store({
     },
     clearResetIndex (state) {
       state.resetIndex = 0;
+    },
+
+    setDatabaseLoaded (state, databaseLoaded) {
+      state.databaseLoaded = databaseLoaded;
     },
 
     setLoginOption (state, loginOption) {

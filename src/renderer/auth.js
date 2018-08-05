@@ -6,12 +6,6 @@ import store from './store'
 import { google } from 'googleapis';
 var OAuth2 = google.auth.OAuth2;
 
-export const LOGIN_OPTIONS = {
-  READ_ONLY: 'read_only',
-  ELEVATED: 'elevated',
-  READ_AND_ELEVATED: 'read_and_elevated'
-};
-
 export const AUTH_TYPE = {
   READ_ONLY: 'read_only',
   ELEVATED: 'elevated'

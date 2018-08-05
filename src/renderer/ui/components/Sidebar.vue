@@ -14,6 +14,12 @@
 						<p>Landing bets</p>
 					</a>
 				</router-link>
+				<router-link :to="{name:'Leaderboard'}" tag="li" active-class="active">	
+					<a>
+						<i class="pe-7s-graph"></i>
+						<p>Leaderboard</p>
+					</a>
+				</router-link>
 				<router-link to="/settings" tag="li" active-class="active">	
 					<a>
 						<i class="pe-7s-config"></i>

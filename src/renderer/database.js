@@ -2,6 +2,8 @@ import { remote } from 'electron'
 import loki from 'lokijs';
 import store from './store'
 
+export var db = null;
+
 /** 
  * This operation verifies that the database exists and is up to date.
  */
@@ -12,17 +14,12 @@ export function initDatabase() {
 	    db.addCollection("results", { indices: ['id'] });
 	  }
 
-	  var results = db.getCollection("results");
-	  results.insert({id: randomId(), name:'odin', age: 50});
-
-	  console.log(results.find({}));
-
 		store.commit('setDatabaseLoaded', true);  
 	};
 
 	// Trigger database load
 	var basePath = remote.app.getPath('userData')+'\\';
-	var db = new loki(basePath + 'leaderboard.db', {
+	db = new loki(basePath + 'leaderboard.db', {
 		autoload: true,
 		autosave: true, 
 		autoloadCallback : databaseInitialize,

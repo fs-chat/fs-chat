@@ -158,6 +158,8 @@ var Game = {
       return ((a.diff < b.diff) ? -1 : ((a.diff > b.diff) ? 1 : 0));
     });
 
+    // TODO: Set medals here instead of resultsToText
+
     store.commit('setFinalLandingRate', rate);
     store.commit('setResetIndex', store.state.messages.length);
     store.commit('setResults', sorted);

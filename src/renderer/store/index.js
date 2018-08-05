@@ -136,6 +136,10 @@ export default new Vuex.Store({
       state.resetIndex = 0;
     },
 
+    setLatestLeaderboardIndex (state, latestLeaderboardIndex) {
+      state.latestLeaderboardIndex = latestLeaderboardIndex;
+    },
+
     setDatabaseLoaded (state, databaseLoaded) {
       state.databaseLoaded = databaseLoaded;
     },

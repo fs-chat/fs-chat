@@ -19,7 +19,13 @@ import storage from 'electron-json-storage'
 
 import VeeValidate from 'vee-validate';
 
-console.logs = []; // Logging util
+// Logging utils
+console.logs = [];
+console.errors = [];
+
+window.onerror = function(error, url, line) {
+  console.errors.push({acc:'error', data:'ERR:'+error+' URL:'+url+' L:'+line});
+};
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 if (process.env.NODE_ENV == 'development') {

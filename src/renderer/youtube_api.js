@@ -78,8 +78,7 @@ export default {
       if (err) {
         console.log('The API returned an error: ' + err);
         callback(err);
-      }
-      if (callback && response.data) {
+      } else if (response.data) {
       	callback(null, response.data);
       }
     });

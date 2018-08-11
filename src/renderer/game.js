@@ -36,16 +36,21 @@ var Game = {
     
     function fetchNewComments() {
       if (liveChatId == store.state.liveChatID) {
-        YoutubeAPI.getNewComments(token, liveChatId, nextPageToken, (res) => {
-          // Update next page token
-          nextPageToken = res.nextPageToken;
+        YoutubeAPI.getNewComments(token, liveChatId, nextPageToken, (err, res) => {
+          if (err) {
+            console.log(err);
+            setTimeout(fetchNewComments, 30000);
+          } else {
+            // Update next page token
+            nextPageToken = res.nextPageToken;
 
-          // Process comments
-          processcomments(res.items);
+            // Process comments
+            processcomments(res.items);
 
-          // Wait till API is ready to receive next call..
-          // console.log('Timeout: ' + res.pollingIntervalMillis);
-          setTimeout(fetchNewComments, res.pollingIntervalMillis);
+            // Wait till API is ready to receive next call..
+            // console.log('Timeout: ' + res.pollingIntervalMillis);
+            setTimeout(fetchNewComments, res.pollingIntervalMillis);
+          }
         });
       }
     }

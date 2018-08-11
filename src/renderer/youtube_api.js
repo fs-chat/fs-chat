@@ -80,10 +80,10 @@ export default {
     service.liveChatMessages.list(params, function(err, response) {
       if (err) {
         console.log('The API returned an error: ' + err);
-        return;
+        callback(err);
       }
       if (callback && response.data) {
-      	callback(response.data);
+      	callback(null, response.data);
       }
     });
 	},

@@ -17,6 +17,8 @@ export const AUTH_TYPE = {
   ELEVATED: 'elevated'
 };
 
+export var auth;
+
 export function importTokenStorage() {
   storage.get("googleapi", (err, data) => {
     if (!err) {
@@ -39,7 +41,16 @@ export function exportTokenStorage() {
 }
 
 export function signInGoogleApi(token, type) {
-  var auth = new OAuth2(global.__settings.clientId, global.__settings.clientSecret);
+  auth = new OAuth2(global.__settings.clientId, global.__settings.clientSecret);
+  auth.on('tokens', (token) => {
+    if (token.refresh_token) {
+      // store the new token locally
+      console.log(token);
+      store.commit('setOauthElevatedToken', token);
+      exportTokenStorage();
+    }
+  });
+
   auth.setCredentials(token);
 
   // Fetch and save user information

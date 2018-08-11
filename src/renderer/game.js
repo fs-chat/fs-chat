@@ -36,10 +36,10 @@ var Game = {
     
     function fetchNewComments() {
       if (liveChatId == store.state.liveChatID) {
-        YoutubeAPI.getNewComments(token, liveChatId, nextPageToken, (err, res) => {
+        YoutubeAPI.getNewComments(liveChatId, nextPageToken, (err, res) => {
           if (err) {
-            console.log(err);
-            setTimeout(fetchNewComments, 30000);
+            console.log("Retry on API error after timeout.");
+            setTimeout(fetchNewComments, 15000);
           } else {
             // Update next page token
             nextPageToken = res.nextPageToken;
@@ -113,7 +113,7 @@ var Game = {
               if (existingBetIndex == -1) placeBet = true;
             }
 
-            if (placeBet) {
+            if (placeBet && message) {
               // Check eligibility for placing bets
               // Must be a string up to 20 characters containing a number
               var numberParse = message.match(/[\d\.]+/g);
@@ -130,6 +130,7 @@ var Game = {
             }
           }
         } catch (err) {
+          console.log("Error parsing comment: " + comments[i]);
           console.log(err);
         }
       }
@@ -144,7 +145,7 @@ var Game = {
           var liveChatID = store.state.liveChatID;
 
           if (token && liveChatID) {
-            YoutubeAPI.insertComment(token, liveChatID, message); 
+            YoutubeAPI.insertComment(liveChatID, message); 
           }
         }
       }
@@ -234,7 +235,7 @@ var Game = {
     var results = store.state.results;
     var liveChatID = store.state.liveChatID;
     if (token && results.length > 0 && liveChatID) {
-      YoutubeAPI.insertComment(token, liveChatID, Game.resultsToText()); 
+      YoutubeAPI.insertComment(liveChatID, Game.resultsToText()); 
     }
   },
   /**
@@ -268,7 +269,7 @@ var Game = {
 
           setTimeout(function () {
             console.log("=> Post results");
-            YoutubeAPI.insertComment(token, liveChatID, resultText); 
+            YoutubeAPI.insertComment(liveChatID, resultText); 
           }, (secondsDelay * 1000));
         } else {
           console.log("No results to show.");

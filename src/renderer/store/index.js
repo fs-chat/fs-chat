@@ -128,6 +128,7 @@ export default new Vuex.Store({
       state.liveChatID = null;
       state.streamVideoId = null;
       state.messages = [];
+      state.resetIndex = 0;
     },
     setResetIndex (state, resetIndex) {
       state.resetIndex = resetIndex;

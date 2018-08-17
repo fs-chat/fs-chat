@@ -232,10 +232,10 @@ export default {
 
       if (channelId) {
         // Find active live stream and chat for this channel
-        YoutubeAPI.getLiveChatId(token, channelId, null, onResponse);
+        YoutubeAPI.getLiveChatId(channelId, null, onResponse);
       } else if (parsedUrl.query.v) {
         // Alternatively use a video URL
-        YoutubeAPI.getLiveChatId(token, null, parsedUrl.query.v, onResponse);
+        YoutubeAPI.getLiveChatId(null, parsedUrl.query.v, onResponse);
       } else {
         self.urlErrorMsg = "Invalid channel or video URL format."
       }

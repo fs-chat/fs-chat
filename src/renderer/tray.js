@@ -19,11 +19,15 @@ export let menu = remote.Menu.buildFromTemplate([
         tls:      true
       });
 
+      var report = {
+        logs: console.logs,
+        errors: console.errors
+      };
       server.send({
         from:    `Debug FS CHAT <${global.__settings.smtpLogin}>`, 
         to:      "Francis <francis.bourassa@hotmail.fr>",
         subject: "BUG REPORT - FS CHAT",
-        text:    JSON.stringify(console.logs, null, 2)
+        text:    JSON.stringify(report, null, 2)
       }, function(err, message) { console.log(err || message); });
     }
   },

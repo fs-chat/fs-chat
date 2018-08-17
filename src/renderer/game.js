@@ -25,6 +25,10 @@ var Game = {
 
     function processcomments(comments) {
       if (comments.length > 0) {
+        for (var i=0; i < comments.length; i++) {
+          comments[i].publishedAt = new Date();
+        }
+        
         store.commit('pushMessages', comments);
         // console.log(comments);
       }
@@ -32,16 +36,21 @@ var Game = {
     
     function fetchNewComments() {
       if (liveChatId == store.state.liveChatID) {
-        YoutubeAPI.getNewComments(token, liveChatId, nextPageToken, (res) => {
-          // Update next page token
-          nextPageToken = res.nextPageToken;
+        YoutubeAPI.getNewComments(liveChatId, nextPageToken, (err, res) => {
+          if (err) {
+            console.log("Retry on API error after timeout.");
+            setTimeout(fetchNewComments, 15000);
+          } else {
+            // Update next page token
+            nextPageToken = res.nextPageToken;
 
-          // Process comments
-          processcomments(res.items);
+            // Process comments
+            processcomments(res.items);
 
-          // Wait till API is ready to receive next call..
-          // console.log('Timeout: ' + res.pollingIntervalMillis);
-          setTimeout(fetchNewComments, res.pollingIntervalMillis);
+            // Wait till API is ready to receive next call..
+            // console.log('Timeout: ' + res.pollingIntervalMillis);
+            setTimeout(fetchNewComments, res.pollingIntervalMillis);
+          }
         });
       }
     }
@@ -73,51 +82,56 @@ var Game = {
       // Get valid bets for the last (minutes_before) minutes
       var comments = store.state.messages;
       for (var i = resetIndex; i < comments.length; i++) {
-        var comment = comments[i];
-        var momentPublishedAt = moment(comment.snippet.publishedAt);
+        try {
+          var comment = comments[i];
+          var momentPublishedAt = moment(comment.publishedAt);
 
-        // Verify time constraint in minutes before landing
-        var diffMinutes = Math.abs(momentPublishedAt.diff(momentLanding, 'minutes'));
-        // console.log({diffMinutes, max: minutesSetting, valid: (diffMinutes < minutesSetting)});
+          // Verify time constraint in minutes before landing
+          var diffMinutes = Math.abs(momentPublishedAt.diff(momentLanding, 'minutes'));
+          // console.log({diffMinutes, max: minutesSetting, valid: (diffMinutes < minutesSetting)});
 
-        // Check time validity before landing
-        if (diffMinutes < minutesSetting) {
-          var channelId = comment.snippet.authorChannelId;
-          var message = comment.snippet.textMessageDetails.messageText;
+          // Check time validity before landing
+          if (diffMinutes < minutesSetting) {
+            var channelId = comment.snippet.authorChannelId;
+            var message = comment.snippet.textMessageDetails.messageText;
 
-          var placeBet = false;
-          var deleteBetIndex = null;
-          var existingBetIndex = store.state.bets.findIndex(bet => {
-            return bet.comment.snippet.authorChannelId == comment.snippet.authorChannelId;
-          });
+            var placeBet = false;
+            var deleteBetIndex = null;
+            var existingBetIndex = store.state.bets.findIndex(bet => {
+              return bet.comment.snippet.authorChannelId == comment.snippet.authorChannelId;
+            });
 
-          if (global.__settings.multipleBets == true) {
-            placeBet = true;
-          } else if (gameMode == GAME_MODES.LAST_BET_OVERWRITE) {
-            if (existingBetIndex != -1) {
-              // Delete current bet for user
-              deleteBetIndex = existingBetIndex;
+            if (global.__settings.multipleBets == true) {
+              placeBet = true;
+            } else if (gameMode == GAME_MODES.LAST_BET_OVERWRITE) {
+              if (existingBetIndex != -1) {
+                // Delete current bet for user
+                deleteBetIndex = existingBetIndex;
+              }
+              placeBet = true;
+            } else if (gameMode == GAME_MODES.FIRST_BET_STANDING) {
+              if (existingBetIndex == -1) placeBet = true;
             }
-            placeBet = true;
-          } else if (gameMode == GAME_MODES.FIRST_BET_STANDING) {
-            if (existingBetIndex == -1) placeBet = true;
-          }
 
-          if (placeBet) {
-            // Check eligibility for placing bets
-            // Must be a string up to 20 characters containing a number
-            var numberParse = message.match(/[\d\.]+/g);
-            if (numberParse && message.length <= 20) {
-              var numbers = numberParse.map(Number);
-              if (numbers.length == 1 && !isNaN(numbers[0])) {
-                if (deleteBetIndex != null) store.commit('deleteBet', deleteBetIndex); 
-                store.commit('placeBet', {  
-                  value: numbers[0],
-                  comment: comment
-                });
+            if (placeBet && message) {
+              // Check eligibility for placing bets
+              // Must be a string up to 20 characters containing a number
+              var numberParse = message.match(/[\d\.]+/g);
+              if (numberParse && message.length <= 20) {
+                var numbers = numberParse.map(Number);
+                if (numbers.length == 1 && !isNaN(numbers[0])) {
+                  if (deleteBetIndex != null) store.commit('deleteBet', deleteBetIndex); 
+                  store.commit('placeBet', {  
+                    value: numbers[0],
+                    comment: comment
+                  });
+                }
               }
             }
           }
+        } catch (err) {
+          console.log("Error parsing comment: " + comments[i]);
+          console.log(err);
         }
       }
 
@@ -131,7 +145,7 @@ var Game = {
           var liveChatID = store.state.liveChatID;
 
           if (token && liveChatID) {
-            YoutubeAPI.insertComment(token, liveChatID, message); 
+            YoutubeAPI.insertComment(liveChatID, message); 
           }
         }
       }
@@ -223,7 +237,7 @@ var Game = {
     var results = store.state.results;
     var liveChatID = store.state.liveChatID;
     if (token && results.length > 0 && liveChatID) {
-      YoutubeAPI.insertComment(token, liveChatID, Game.resultsToText()); 
+      YoutubeAPI.insertComment(liveChatID, Game.resultsToText()); 
     }
   },
   /**
@@ -257,11 +271,15 @@ var Game = {
 
           setTimeout(function () {
             console.log("=> Post results");
-            YoutubeAPI.insertComment(token, liveChatID, resultText); 
+            YoutubeAPI.insertComment(liveChatID, resultText); 
           }, (secondsDelay * 1000));
         } else {
           console.log("No results to show.");
         }
+      } else {
+        console.log("Token or liveChatID invalid not set..");
+        console.log(token);
+        console.log(rate);
       }
     });
   }

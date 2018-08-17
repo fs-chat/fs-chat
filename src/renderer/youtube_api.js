@@ -2,12 +2,11 @@ import { google } from 'googleapis';
 var OAuth2 = google.auth.OAuth2;
 
 import store from './store';
+import { auth } from './auth';
 
 export default {
-	getLiveChatId(token, channelId, videoId, callback) {
+	getLiveChatId(channelId, videoId, callback) {
 	  var service = google.youtube('v3');
-    var auth = new OAuth2(global.__settings.clientId, global.__settings.clientSecret);
-    auth.setCredentials(token);
 
     var onVideoIdFound = function (id) {
       service.videos.list({
@@ -62,10 +61,8 @@ export default {
       if (callback) callback('Something unusual happened, try again.');
     }
 	},
-	getNewComments(token, liveChatId, nextPageToken, callback) {
+	getNewComments(liveChatId, nextPageToken, callback) {
 	  var service = google.youtube('v3');
-    var auth = new OAuth2(global.__settings.clientId, global.__settings.clientSecret);
-    auth.setCredentials(token);
 
     var params = {
       auth: auth,
@@ -80,17 +77,14 @@ export default {
     service.liveChatMessages.list(params, function(err, response) {
       if (err) {
         console.log('The API returned an error: ' + err);
-        return;
-      }
-      if (callback && response.data) {
-      	callback(response.data);
+        callback(err);
+      } else if (response.data) {
+      	callback(null, response.data);
       }
     });
 	},
-	insertComment(token, liveChatId, messageText) {
+	insertComment(liveChatId, messageText) {
 	  var service = google.youtube('v3');
-    var auth = new OAuth2(global.__settings.clientId, global.__settings.clientSecret);
-    auth.setCredentials(token);
 
     service.liveChatMessages.insert({
       auth: auth,
@@ -110,29 +104,5 @@ export default {
         return;
       }
     });
-	},
-	fetchChannel(token, channelId, callback) {
-	  var service = google.youtube('v3');
-    var auth = new OAuth2(global.__settings.clientId, global.__settings.clientSecret);
-    auth.setCredentials(token);
-
-		service.channels.list({
-		  auth: auth,
-		  id: channelId,
-		  part: 'snippet,contentDetails,brandingSettings,invideoPromotion,statistics',
-		}, function(err, response) {
-			console.log('res');
-
-		  if (err) {
-		    console.log('The API returned an error: ' + err);
-		    return;
-		  }
-
-		  var channels = response.data.items;
-		  if (channels.length > 0) {
-		   	var channel = channels[0];
-		   	if (callback) callback(channel);
-		  }
-		});
 	}
 };

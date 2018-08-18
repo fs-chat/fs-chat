@@ -10,6 +10,9 @@ export var db = null;
 export function initDatabase() {
 	var databaseInitialize = function() {
 		// Init collections
+	  if (db.getCollection("comments") === null) {
+	    db.addCollection("comments", { indices: ['id'] });
+	  }
 	  if (db.getCollection("results") === null) {
 	    db.addCollection("results", { indices: ['id'] });
 	  }

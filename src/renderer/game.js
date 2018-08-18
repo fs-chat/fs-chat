@@ -158,25 +158,40 @@ var Game = {
    */
   compileResults(landingRate) {
     var gameSettings = store.state.settings.game_settings;
-    var betsCopy = JSON.parse(JSON.stringify(store.state.bets));
+    var bets = JSON.parse(JSON.stringify(store.state.bets));
     
     var rate = Math.abs(landingRate);
     if (gameSettings.rounded_rate) {
       rate = Math.round(rate);
     }
 
-    var sorted = betsCopy.map(bet => {
-      bet.diff = Math.abs(bet.value - rate);
+    var results = bets.map(bet => {
+      bet.diff = Math.abs(bet.value - rate).toFixed(1);
       return bet;
     }).sort((a, b) => {
       return ((a.diff < b.diff) ? -1 : ((a.diff > b.diff) ? 1 : 0));
     });
 
-    // TODO: Set medals here instead of resultsToText
+    // Calculate rank ...
+    // Flags to handle equal rank
+    var lastRank = null;
+    var lastDiff = null;
+
+    for (var i = 0; i < results.length; i++) {
+      var rank = i+1;
+      var result = results[i];
+      var diffValue = result.diff;
+
+      if (diffValue == lastDiff) rank = lastRank;
+      reuslt.rank = rank;
+
+      lastRank = rank;
+      lastDiff = diffValue;
+    }
 
     store.commit('setFinalLandingRate', rate);
     store.commit('setResetIndex', store.state.messages.length);
-    store.commit('setResults', sorted);
+    store.commit('setResults', results);
   },
   /*
    * Reset results 
@@ -199,30 +214,24 @@ var Game = {
       var medalEmojis = ['🥇','🥈','🥉'];
 
       // Display util
-      function diffText (value, actual) {
-        var diff = value - actual;
+      function diffText (diff) {
         if (diff == 0) return 'Exact value!';
+        else if (diff <= 0.1) return 'Almost exact value!';
         else {
           var diffFixed = (diff % 1 != 0) ? diff.toFixed(1) : diff;
           return (diff>0) ? '+'+diffFixed : diffFixed;
         }
       }
 
-      // Flags to handle equal rank
-      var lastMedal = null;
-      var lastDiff = null;
-
-      for (var i = 0; (i < results.length && i < 3); i++) {
+      // Construct results string
+      for (var i = 0; i < results.length; i++) {
         var result = results[i];
-        var medal = medalEmojis[i];
-        var diffValue = Math.abs(result.value - rate).toFixed(1);
-
-        if (diffValue == lastDiff) medal = lastMedal;
-        winnerTextArr.push(`${medal} ${result.comment.authorDetails.displayName}, -${result.value} fpm `+
-          `(${diffText(result.value, rate)})`)
-
-        lastMedal = medal;
-        lastDiff = diffValue;
+        if (result.rank > 3) break;
+        else {
+          var medal = medalEmojis[result.rank-1];
+          winnerTextArr.push(`${medal} ${result.comment.authorDetails.displayName}, -${result.value} fpm `+
+            `(${diffText(result.diff)})`)
+        }
       }
 
       return winnerTextArr.join(' || ');

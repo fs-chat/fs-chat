@@ -42,7 +42,9 @@ export default new Vuex.Store({
     // Leaderboard
     leaderboardData: [],
     latestLeaderboardIndex: 0,
-    leaderboardSort: 'nbComments',
+    leaderboardSort: 'medalValue',
+    leaderboardSortReverse: true,
+    leaderboardInterval: null,
 
     // Local Database adapter
     databaseLoaded: false,
@@ -139,6 +141,16 @@ export default new Vuex.Store({
 
     setLatestLeaderboardIndex (state, latestLeaderboardIndex) {
       state.latestLeaderboardIndex = latestLeaderboardIndex;
+    },
+    setLeaderboardData (state, leaderboardData) {
+      state.leaderboardData = leaderboardData;
+    },
+    setLeaderboardSortBy (state, { keyword, reverse }) {
+      state.leaderboardSort = keyword;
+      state.leaderboardSortReverse = reverse;
+    },
+    setLeaderboardInterval (state, leaderboardInterval) {
+      state.leaderboardInterval = leaderboardInterval;
     },
 
     setDatabaseLoaded (state, databaseLoaded) {

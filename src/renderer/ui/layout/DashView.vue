@@ -99,6 +99,11 @@ export default {
 
     // Init navigation toggle for small screens
     lbd.initRightMenu();
+    $( "body" ).on( "click", ".sidebar ul li", function() {
+      $('html').removeClass('nav-open');
+      $('.navbar-header button').removeClass('toggled');
+      $('#bodyClick').remove();
+    });
 
     //  Activate the tooltips
     $('[rel="tooltip"]').tooltip();

@@ -166,7 +166,7 @@ var Game = {
     }
 
     var results = bets.map(bet => {
-      bet.diff = Math.abs(bet.value - rate).toFixed(1);
+      bet.diff = Math.abs(bet.value - rate);
       return bet;
     }).sort((a, b) => {
       return ((a.diff < b.diff) ? -1 : ((a.diff > b.diff) ? 1 : 0));
@@ -224,14 +224,11 @@ var Game = {
       }
 
       // Construct results string
-      for (var i = 0; i < results.length; i++) {
+      for (var i = 0; (i < results.length && i < 3); i++) {
         var result = results[i];
-        if (result.rank > 3) break;
-        else {
-          var medal = medalEmojis[result.rank-1];
-          winnerTextArr.push(`${medal} ${result.comment.authorDetails.displayName}, -${result.value} fpm `+
-            `(${diffText(result.diff)})`)
-        }
+        var medal = medalEmojis[result.rank-1];
+        winnerTextArr.push(`${medal} ${result.comment.authorDetails.displayName}, -${result.value} fpm `+
+          `(${diffText(result.diff)})`)
       }
 
       return winnerTextArr.join(' || ');

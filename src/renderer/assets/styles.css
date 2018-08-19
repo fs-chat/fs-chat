@@ -297,6 +297,12 @@ table {
     width: 30px;
 }
 
+.leaderboard .profile-image {
+  width: 20px;
+  height: 20px;
+  margin-right: 0px;
+}
+
 .profile-name {
     font-size: 18px;
 }

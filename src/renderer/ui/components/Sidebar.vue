@@ -11,7 +11,7 @@
 				<router-link :to="{name:'LandingGame'}" tag="li" active-class="active">	
 					<a>
 						<i class="pe-7s-medal"></i>
-						<p>Landing bets</p>
+						<p>Landing game</p>
 					</a>
 				</router-link>
 				<router-link :to="{name:'Leaderboard'}" tag="li" active-class="active">	

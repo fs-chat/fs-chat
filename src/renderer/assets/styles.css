@@ -153,6 +153,10 @@
   margin-bottom: 11px;
 }
 
+.form-control.no-focus {
+  border: 1px solid #E3E3E3 !important;
+}
+
 @media all and (max-width: 991px)  {
     .sidebar .nav > li.active-pro{
         position: initial;
@@ -457,9 +461,6 @@ input:checked + .slider:before {
   border-right: 5px solid transparent;
   border-top: 0px solid transparent;
   border-bottom: 5px solid #333;
-}
-.table-sortable > thead > tr > th.sortable.asc:hover:after {
-  border-bottom: 5px solid #888;
 }
 /* !Ascending */
 

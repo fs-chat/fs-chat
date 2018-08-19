@@ -1,32 +1,22 @@
 import { remote } from 'electron'
-import loki from 'lokijs';
+import Datastore from 'nedb';
 import store from './store'
 
-export var db = null;
+export var resultsDb = null;
 
 /** 
  * This operation verifies that the database exists and is up to date.
  */
 export function initDatabase() {
-	var databaseInitialize = function() {
-		// Init collections
-	  if (db.getCollection("comments") === null) {
-	    db.addCollection("comments", { indices: ['id'] });
-	  }
-	  if (db.getCollection("results") === null) {
-	    db.addCollection("results", { indices: ['id'] });
-	  }
+	// Persistent datastore with manual loading
+	resultsDb = new Datastore({ filename: remote.app.getPath('userData')+'\\leaderboard.db' });
+	resultsDb.loadDatabase(function (err) {    // Callback is optional
+	  if (err) console.log(err);
+	  else store.commit('setDatabaseLoaded', true);
+	});
 
-		store.commit('setDatabaseLoaded', true);  
-	};
-
-	// Trigger database load
-	var basePath = remote.app.getPath('userData')+'\\';
-	db = new loki(basePath + 'leaderboard.db', {
-		autoload: true,
-		autosave: true, 
-		autoloadCallback : databaseInitialize,
-		autosaveInterval: 4000
+	resultsDb.ensureIndex({ fieldName: 'date' }, function (err) {
+		if (err) console.log(err);
 	});
 }
 

@@ -24,6 +24,7 @@
                 <select class="form-control no-focus" v-model="time_since">
                   <option value="all">All time</option>
                   <option value="today">Today</option>
+                  <option value="1W">Last 7 days</option>
                   <option value="1M">Last 1 month</option>
                   <option value="2M">Last 2 months</option>
                   <option value="3M">Last 3 months</option>
@@ -136,7 +137,8 @@ export default {
     setTimeout(function () { self.inited = true; }, 100);
 
     // Loader la database et mettre à jour le tableau
-    if (this.leaderboardData.length == 0) {
+    if (this.leaderboardData.length == 0 || 
+          this.$store.state.loaderboardUpToDate == false) {
       this.updateLeaderboard();
     }
   },
@@ -160,6 +162,7 @@ export default {
       'liveChatID',
       'databaseLoaded',
       'loaderboardLoading',
+      'loaderboardUpToDate',
       'leaderboardData',
       'leaderboardSort',
       'leaderboardSortReverse',
@@ -193,14 +196,6 @@ export default {
         var newComments = deepClone(self.messages).slice(self.latestLeaderboardIndex);
         self.$store.commit('setLatestLeaderboardIndex', self.messages.length);
 
-        function insertResult(result) {
-          resultsDb.count({ id: result.id }, function (err, count) {
-            if (count == 0) {
-              resultsDb.insert(result);
-            }
-          });
-        }
-
         // Each comment is a fake result with random data for tests
         for (var i = 0; i < newComments.length; i++) {
           var comment = newComments[i];
@@ -211,11 +206,12 @@ export default {
           var daysAgo = (Math.floor(Math.random() * 60) + 1);
 
           if (comment.snippet.textMessageDetails) {
-            insertResult({
+            self.$store.dispatch('saveResultLeaderboard', {
               id: comment.id,
               precision: precision,
               message: comment.snippet.textMessageDetails.messageText,
               date: moment().subtract(daysAgo,'d').toISOString(),
+              isMedal: (rank <= 3),
               rank: rank,
               user: {
                 channelId: comment.authorDetails.channelId,

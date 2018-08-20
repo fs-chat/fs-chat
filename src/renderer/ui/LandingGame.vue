@@ -177,9 +177,7 @@ export default {
     var finalRate = this.$store.state.finalLandingRate;
     if (finalRate) {
       this.finalLandingRateField = finalRate;
-      this.compileResults();
     }
-
   },
   computed: {
     ...mapState([

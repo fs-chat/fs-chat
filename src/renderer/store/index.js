@@ -44,11 +44,12 @@ export default new Vuex.Store({
     // Leaderboard
     leaderboardData: [],
     loaderboardLoading: true,
-    latestLeaderboardIndex: 0,
-    leaderboardSort: 'medalValue',
+    loaderboardUpToDate: false,
     leaderboardTimeSince: 'all',
+    leaderboardSort: 'medalValue',
     leaderboardSortReverse: true,
-    leaderboardInterval: null,
+    latestLeaderboardIndex: 0, // debug
+    leaderboardInterval: null, // debug
 
     // Local Database adapter
     databaseLoaded: false,
@@ -152,6 +153,9 @@ export default new Vuex.Store({
     setLeaderboardLoading (state, loaderboardLoading) {
       state.loaderboardLoading = loaderboardLoading;
     },
+    setLeaderboardUpToDate (state, loaderboardUpToDate) {
+      state.loaderboardUpToDate = loaderboardUpToDate;
+    },
     setLeaderboardTimeSince (state, leaderboardTimeSince) {
       state.leaderboardTimeSince = leaderboardTimeSince;
     },
@@ -247,6 +251,13 @@ export default new Vuex.Store({
         });
       })
     },
+    saveResultLeaderboard ({ state, commit }, result) {
+      resultsDb.count({ id: result.id }, function (err, count) {
+        if (count == 0) {
+          resultsDb.insert(result);
+        }
+      });
+    },
     updateLeaderboardData ({ state, commit }) {
       return new Promise((resolve, reject) => {
         commit('setLeaderboardLoading', true);
@@ -257,6 +268,7 @@ export default new Vuex.Store({
 
         // Create date rage
         if (since == 'today') dateStart = moment();
+        else if (since == '1W') dateStart = moment().subtract(1,'week');
         else if (since == '1M') dateStart = moment().subtract(1,'months');
         else if (since == '2M') dateStart = moment().subtract(2,'months');
         else if (since == '3M') dateStart = moment().subtract(3,'months');
@@ -300,7 +312,7 @@ export default new Vuex.Store({
               var result = user.results[i];
 
               var rank = result.rank;
-              if (rank <= 3) {
+              if (result.isMedal && rank <= 3) {
                 if (rank == 1) medals.gold++;; 
                 if (rank == 2) medals.silver++;
                 if (rank == 3) medals.bronze++;
@@ -328,6 +340,7 @@ export default new Vuex.Store({
 
           // Update (leaderboardData) table with data
           commit('setLeaderboardData', resultsData);
+          commit('setLeaderboardUpToDate', true);
           commit('setLeaderboardLoading', false);
         });
       })

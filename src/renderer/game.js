@@ -159,14 +159,17 @@ var Game = {
   compileResults(landingRate) {
     var gameSettings = store.state.settings.game_settings;
     var bets = JSON.parse(JSON.stringify(store.state.bets));
-    
+    var nowDate = moment().toISOString();
+
     var rate = Math.abs(landingRate);
     if (gameSettings.rounded_rate) {
       rate = Math.round(rate);
     }
 
     var results = bets.map(bet => {
-      bet.diff = Math.abs(bet.value - rate);
+      var diff = bet.value - rate;
+      bet.diff = Math.abs(diff);
+      bet.diffReal = diff;
       return bet;
     }).sort((a, b) => {
       return ((a.diff < b.diff) ? -1 : ((a.diff > b.diff) ? 1 : 0));
@@ -183,15 +186,38 @@ var Game = {
       var diffValue = result.diff;
 
       if (diffValue == lastDiff) rank = lastRank;
-      reuslt.rank = rank;
+      result.rank = rank;
 
       lastRank = rank;
       lastDiff = diffValue;
+
+      try {
+        // Save result to local database
+        store.dispatch('saveResultLeaderboard', {
+          id: result.comment.id,
+          precision: diffValue,
+          message: result.comment.snippet.textMessageDetails.messageText,
+          date: nowDate,
+          isMedal: (rank <= 3 && i < 3),
+          rank: rank,
+          user: {
+            channelId: result.comment.authorDetails.channelId,
+            profileImageUrl: result.comment.authorDetails.profileImageUrl,
+            displayName: result.comment.authorDetails.displayName
+          }
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
 
+    // Save results and context
     store.commit('setFinalLandingRate', rate);
     store.commit('setResetIndex', store.state.messages.length);
     store.commit('setResults', results);
+
+    // This will trigger a refresh of the leaderboard page
+    store.commit('setLeaderboardUpToDate', false);
   },
   /*
    * Reset results 
@@ -216,7 +242,7 @@ var Game = {
       // Display util
       function diffText (diff) {
         if (diff == 0) return 'Exact value!';
-        else if (diff <= 0.1) return 'Almost exact value!';
+        else if (Math.abs(diff) <= 0.1) return 'Very close!';
         else {
           var diffFixed = (diff % 1 != 0) ? diff.toFixed(1) : diff;
           return (diff>0) ? '+'+diffFixed : diffFixed;
@@ -228,7 +254,7 @@ var Game = {
         var result = results[i];
         var medal = medalEmojis[result.rank-1];
         winnerTextArr.push(`${medal} ${result.comment.authorDetails.displayName}, -${result.value} fpm `+
-          `(${diffText(result.diff)})`)
+          `(${diffText(result.diffReal)})`)
       }
 
       return winnerTextArr.join(' || ');

@@ -276,11 +276,11 @@ export default new Vuex.Store({
         else if (since == 'year') dateStart = moment().subtract(1,'year');
 
         if (dateStart) {
-          args.date = { $gt: dateStart.startOf('day').toISOString() };
+          args.date = { $gte: dateStart.startOf('day').toISOString() };
         }
 
         // Fetch date range against local data store
-        var results = resultsDb.find(args, function (err, results) {
+        var results = resultsDb.find(args).sort({ date: -1 }).exec(function (err, results) {
           // Group users together with reduce
           var grouped = results.reduce((users, result) => {
             var channelId = result.user.channelId;
@@ -303,7 +303,6 @@ export default new Vuex.Store({
 
             var precisionSum = 0;
             var average = null;
-            var nbCharacters = 0;
 
             var medalValue = 0;
             var medals = { gold: 0, silver: 0, bronze: 0 };
@@ -319,7 +318,6 @@ export default new Vuex.Store({
               }
 
               precisionSum += parseFloat(result.precision);
-              nbCharacters += result.message.length;
             }
 
             // Medal text and value
@@ -334,7 +332,7 @@ export default new Vuex.Store({
 
             return { 
               user: user.user, 
-              nbComments, average, nbCharacters, medalsText, medalValue 
+              nbComments, average, medalsText, medalValue 
             };
           });
 

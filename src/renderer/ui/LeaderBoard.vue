@@ -131,7 +131,7 @@ export default {
   },
   created: function() {
     var self = this;
-    this.$store.commit('setTitle', "Leaderboad");
+    this.$store.commit('setTitle', "Leaderboard");
     this.debug = (process.env.NODE_ENV == 'development');
     this.time_since = this.$store.state.leaderboardTimeSince;
     setTimeout(function () { self.inited = true; }, 100);
@@ -203,7 +203,7 @@ export default {
 
           var medal = null;
           var rank = (Math.floor(Math.random() * 25) + 1);
-          var daysAgo = (Math.floor(Math.random() * 60) + 1);
+          var daysAgo = Math.floor(Math.random() * 60);
 
           if (comment.snippet.textMessageDetails) {
             self.$store.dispatch('saveResultLeaderboard', {

@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
+import { OAuth2Provider } from 'electron-oauth-helper'
 import path from 'path'
 
 import expressInit from '../express/server.js'
@@ -148,7 +149,50 @@ function createWindow () {
     chatWindow.show();
   });
 
-  // TODO: Custom port
+  ipcMain.on('login-streamlabs', function(event, { scope }) {
+    const config = {
+      client_id: "DxzGog2BUHOc2BzOCKLBFZSHDvL6mxk6jENAwwTL",
+      client_secret: "odvMdIJCxKN3LughvsFjr1uhlFJIex51uW8bBnRg",
+      scope: scope,
+      response_type: "code",
+      redirect_uri: "http://127.0.0.1",
+      authorize_url: "https://streamlabs.com/api/v1.0/authorize",
+      access_token_url: "https://streamlabs.com/api/v1.0/token",
+    };
+
+    const window = new BrowserWindow({
+      width: 600,
+      height: 800,
+      center: true,
+      show: true,
+      resizable: false,
+      autoHideMenuBar: true,
+      webPreferences: {
+        devTools : false,
+        nodeIntegration: false, // We recommend disabling nodeIntegration for security.
+        contextIsolation: true // We recommend enabling contextIsolation for security.
+        // see https://github.com/electron/electron/blob/master/docs/tutorial/security.md
+      }
+    });
+
+    const provider = new OAuth2Provider(config);
+    provider.perform(window)
+      .then(resp => {
+
+        // Logged in
+        console.log(resp);
+
+        window.close();
+        mainWindow.webContents.send("login-streamlabs-result", {
+          token: resp
+        });
+
+      }).catch(error => { 
+        console.error(error);
+      })
+  });
+
+  // Start express server for external landing endpoint
   expressInit(mainWindow);
 }
 

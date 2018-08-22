@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron'
 import storage from 'electron-json-storage'
+import request from 'request'
 
 import store from './store'
 
@@ -22,6 +23,9 @@ export function importTokenStorage() {
       if (data.oauthReadOnlyToken){
         signInGoogleApi(data.oauthReadOnlyToken, AUTH_TYPE.READ_ONLY);
       }
+      if (data.oauthStreamlabsToken){
+        signInStreamlabsApi(data.oauthStreamlabsToken, false);
+      }
     }
   });
 }
@@ -31,6 +35,7 @@ export function exportTokenStorage() {
     login_option: store.state.loginOption,
     oauthElevatedToken: store.state.oauthElevatedToken,
     oauthReadOnlyToken: store.state.oauthReadOnlyToken,
+    oauthStreamlabsToken: store.state.oauthStreamlabsToken,
   });
 }
 
@@ -82,4 +87,31 @@ export function signOutGoogleApi() {
   store.commit('setReadOnlyChannelInfo', null);
   store.commit('setOauthElevatedToken', null);
   store.commit('setElevatedChannelInfo', null);
+}
+
+/**
+ * Stores the tokens locally.
+ * @param  {[type]} token  Result of the OAuth request
+ */
+export function signInStreamlabsApi(token, save=true) {
+  var options = { method: 'GET',
+    url: 'https://streamlabs.com/api/v1.0/user',
+    qs: { access_token: token.access_token } };
+
+  request(options, function (error, response, body) {
+    if (error) throw new Error(error);
+    else {
+      var accountInfo = JSON.parse(body);
+      if (accountInfo) {
+        store.commit('setStreamlabsAccountInfo', accountInfo);
+      }
+    }
+  });
+
+  store.commit('setOauthStreamlabsToken', token);
+  if (save) exportTokenStorage();
+}
+
+export function signOutStreamlabsApi() {
+  store.commit('setOauthStreamlabsToken', null);
 }

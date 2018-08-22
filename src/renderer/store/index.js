@@ -61,6 +61,10 @@ export default new Vuex.Store({
     oauthReadOnlyToken: null,
     readOnlyChannelInfo: null,
 
+    // Streamlabs API
+    oauthStreamlabsToken: null,
+    streamlabsAccountInfo: null,
+
     // Update info
     updateStatusText: "",
     updateNotificationSent: false,
@@ -180,6 +184,13 @@ export default new Vuex.Store({
     },
     setElevatedChannelInfo (state, info) {
       state.elevatedChannelInfo = info;
+    },
+
+    setOauthStreamlabsToken (state, token) {
+      state.oauthStreamlabsToken = token;
+    },
+    setStreamlabsAccountInfo (state, info) {
+      state.streamlabsAccountInfo = info;
     },
 
     setOauthReadOnlyToken (state, token) {

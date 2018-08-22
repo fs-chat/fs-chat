@@ -5,51 +5,63 @@
         <div class="card">
           <div class="header">
             <h4 class="title">Application settings</h4> 
+            <p class="category">Associate external accounts</p>
           </div>
           <div class="content">
             <div class="row">
               <!-- Google API -->
               <div class="col-md-12">
-                <!-- Logged in -->
-                <div class="form-group" v-if="elevatedChannelInfo">
-                  <label>Account information</label>
-                  <p>Logged in as <b><a href="#" style="font-weight: bold;" 
-                    v-on:click.prevent="navigateChannel(elevatedChannelInfo)">{{ channelName(elevatedChannelInfo) }}</a></b></p>
-                  <button type="submit" class="btn btn-danger btn-fill" v-on:click.prevent="logout()">
-                    Sign out
-                  </button>
-                </div>
-                <!-- Not Logged in -->
-                <div v-else>
-                  <label>Account information</label>
-                  <p>Your account is not currently associated.</b></p>
-                  <div class="form-group">
-                    <button type="submit" class="btn btn-success btn-fill" v-on:click.prevent="login()">
-                      Sign in with Google
-                    </button>
+
+                <div class="form-group">
+                  <div class="panel panel-default"> 
+                    <div class="panel-heading"> 
+                      <h3 class="panel-title">Youtube account</h3> 
+                      <!-- <h6 class="card-subtitle">{{ channelName(elevatedChannelInfo) }}</h6> -->
+                    </div> 
+                    <div class="panel-body">
+                      <!-- Logged in -->
+                      <template v-if="elevatedChannelInfo">
+                        <p>Logged in as <b><a href="#" style="font-weight: bold;" 
+                          v-on:click.prevent="navigateChannel(elevatedChannelInfo)">{{ channelName(elevatedChannelInfo) }}</a></b></p>
+                        <button type="submit" class="btn btn-danger btn-fill" v-on:click.prevent="logout()">
+                          Disconnect  
+                        </button>
+                      </template>
+                      <!-- Not logged in -->
+                      <template v-else>
+                        <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="login()">
+                          Sign in with Google
+                        </button>
+                      </template>
+                    </div> 
                   </div>
                 </div>
 
-              <!-- Streamlabs -->
+                <!-- Streamlabs -->
                 <div class="form-group">
-                  <label>Steamlabs account</label>
-                  <!-- Logged in -->
-                  <template v-if="elevatedChannelInfo">
-                    <p>Logged in as <b><a href="#" style="font-weight: bold;" 
-                      v-on:click.prevent="navigateChannel(elevatedChannelInfo)">{{ channelName(elevatedChannelInfo) }}</a></b></p>
-                    <button type="submit" class="btn btn-danger btn-fill" v-on:click.prevent="logout()">
-                      Sign out
-                    </button>
-                  </template>
-                  <!-- Not logged in -->
-                  <template v-else>
-                    <p>Your account is not currently associated.</b></p>
-                    <div class="form-group">
-                      <button type="submit" class="btn btn-success btn-fill" v-on:click.prevent="login()">
-                        Sign in with Steamlabs
-                      </button>
-                    </div>
-                  </template>
+                  <div class="panel panel-default"> 
+                    <div class="panel-heading"> 
+                      <h3 class="panel-title">Steamlabs account</h3></div>
+                      <div class="panel-body">
+                        <!-- Logged in -->
+                        <template v-if="oauthStreamlabsToken">
+                          <p v-if="streamlabsAccountInfo">Logged in as <b>{{ streamLabsName(streamlabsAccountInfo) }}</b></p>
+                          <button type="submit" class="btn btn-danger btn-fill" v-on:click.prevent="logoutStreamlabs()">
+                            Disconnect
+                          </button> 
+                        </template>
+                        <!-- Not logged in -->
+                        <template v-else>
+                          <p>Your account is not currently associated.</b></p>
+                          <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="loginStreamlabs()">
+                              Sign in with Steamlabs
+                            </button>
+                          </div>
+                        </template>
+                      </div>
+                    </div> 
+                  </div>
                 </div>
               </div>
             </div>
@@ -64,7 +76,7 @@
 import { mapState } from 'vuex'
 import storage from 'electron-json-storage'
 import deepExtend from 'deep-extend'
-import { signOutGoogleApi } from '../auth'
+import { signOutGoogleApi, signOutStreamlabsApi } from '../auth'
 import { ipcRenderer, remote, shell } from 'electron'
 
 export default {
@@ -88,7 +100,9 @@ export default {
   },
   computed: {
     ...mapState([
-      'elevatedChannelInfo'
+      'elevatedChannelInfo',
+      'oauthStreamlabsToken',
+      'streamlabsAccountInfo'
     ]),
     nomUsager () {
     	var nomUsager = "";
@@ -109,11 +123,23 @@ export default {
         ]
       });
     },
+    loginStreamlabs() {
+      var self = this;
+      ipcRenderer.send("login-streamlabs", { 
+        scope: "" // space separated scopes
+      });
+    },
     logout() {
       signOutGoogleApi();
     },
     channelName(channelInfo) {
       return channelInfo.brandingSettings.channel.title;
+    },
+    streamLabsName(account) {
+      return account.streamlabs.display_name;
+    },
+    logoutStreamlabs() {
+      signOutStreamlabsApi();
     },
     navigateChannel(channelInfo) {
       var url = `https://www.youtube.com/channel/${channelInfo.id}`;

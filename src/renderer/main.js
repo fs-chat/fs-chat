@@ -14,8 +14,8 @@ import Game from './game'
 
 import { tray } from './tray'
 import { initDatabase } from './database'
-import { signInGoogleApi, AUTH_TYPE,
-  importTokenStorage } from './auth'
+import { signInGoogleApi, AUTH_TYPE, importTokenStorage,
+  signInStreamlabsApi } from './auth'
 import storage from 'electron-json-storage'
 
 import VeeValidate from 'vee-validate';
@@ -67,6 +67,10 @@ ipcRenderer.on('login-google-result', function(event, data) {
     var tokenReadOnly = data.token;
     signInGoogleApi(tokenReadOnly, data.type);
   }
+});
+
+ipcRenderer.on('login-streamlabs-result', function(event, data) {
+  if (data && data.token) signInStreamlabsApi(data.token);
 });
 
 // Resume last session

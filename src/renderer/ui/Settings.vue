@@ -8,6 +8,7 @@
           </div>
           <div class="content">
             <div class="row">
+              <!-- Google API -->
               <div class="col-md-12">
                 <!-- Logged in -->
                 <div class="form-group" v-if="elevatedChannelInfo">
@@ -27,6 +28,28 @@
                       Sign in with Google
                     </button>
                   </div>
+                </div>
+
+              <!-- Streamlabs -->
+                <div class="form-group">
+                  <label>Steamlabs account</label>
+                  <!-- Logged in -->
+                  <template v-if="elevatedChannelInfo">
+                    <p>Logged in as <b><a href="#" style="font-weight: bold;" 
+                      v-on:click.prevent="navigateChannel(elevatedChannelInfo)">{{ channelName(elevatedChannelInfo) }}</a></b></p>
+                    <button type="submit" class="btn btn-danger btn-fill" v-on:click.prevent="logout()">
+                      Sign out
+                    </button>
+                  </template>
+                  <!-- Not logged in -->
+                  <template v-else>
+                    <p>Your account is not currently associated.</b></p>
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-success btn-fill" v-on:click.prevent="login()">
+                        Sign in with Steamlabs
+                      </button>
+                    </div>
+                  </template>
                 </div>
               </div>
             </div>

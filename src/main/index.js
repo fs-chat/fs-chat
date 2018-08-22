@@ -114,7 +114,8 @@ function createWindow () {
   ipcMain.on('login-google', function(event, { scopes, type }) {
     const googleOauth = electronGoogleOauth({
       center: true,
-      height : 700,
+      width: 600,
+      height: 800,
       show: true,
       resizable: false,
       autoHideMenuBar: true,

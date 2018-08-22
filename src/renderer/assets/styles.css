@@ -404,6 +404,73 @@ input:checked + .slider:before {
   text-decoration: underline;
 }
 
+/* Settings */
+.panel-account .panel-heading {
+  position: relative;
+}
+.panel-account .panel-body p {
+  margin: 0px;
+}
+.panel-account .panel-title {
+  color: #000;
+}
+
+.youtube-icon {
+  float: left;
+  width: 46px;
+  margin-right: 13px;
+  padding: 4px;
+}
+.streamlabs-icon {
+  float: left;
+  width: 46px;
+  margin-right: 13px;
+  padding: 4px;
+}
+
+/* Streamlabs */
+.panel-streamlabs .panel-heading {
+  background-color: 0px;
+}
+
+.btn-connect {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  color: #099210;
+  border-color: #50bf56;
+  margin: 10px 120px 10px 10px;
+  margin-right: 12px;
+  padding: 6px 10px;
+  font-size: 15px;
+}
+
+.btn-disconnect,
+.btn-disconnect:focus {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  color: #777777;
+  border-color: #adadad;
+  margin: 10px 120px 10px 10px;
+  margin-right: 12px;
+  padding: 6px 10px;
+  font-size: 15px;
+}
+
+.btn-disconnect:hover {
+  color: #fff;
+  border-color: #FF4A55;
+  color: #FF4A55;
+}
+
+.panel-heading {
+  border-bottom: 0px;
+}
+.panel-body {
+  border-top: 1px solid #eaeaea;
+}
+
 @media (max-width: 991px) {
   .main-panel .navbar {
     left: 0px;

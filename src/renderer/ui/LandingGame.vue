@@ -129,7 +129,7 @@
           <div class="content" v-else>
             <div class="row">
               <div class="col-md-12" >
-                <i>You must be <router-link to="/settings"> logged in </router-link> to use this functionality.</i>
+                <i>You must associate a <router-link to="/settings">Youtube account</router-link> to use this functionality.</i>
               </div>
             </div>
           </div>

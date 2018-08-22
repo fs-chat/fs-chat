@@ -114,4 +114,5 @@ export function signInStreamlabsApi(token, save=true) {
 
 export function signOutStreamlabsApi() {
   store.commit('setOauthStreamlabsToken', null);
+  exportTokenStorage();
 }

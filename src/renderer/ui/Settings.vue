@@ -13,54 +13,54 @@
               <div class="col-md-12">
 
                 <div class="form-group">
-                  <div class="panel panel-default"> 
+                  <div class="panel panel-default panel-account panel-google"> 
                     <div class="panel-heading"> 
-                      <h3 class="panel-title">Youtube account</h3> 
-                      <!-- <h6 class="card-subtitle">{{ channelName(elevatedChannelInfo) }}</h6> -->
-                    </div> 
-                    <div class="panel-body">
-                      <!-- Logged in -->
+                      <img src="~@/assets/youtube.svg" alt="" class="youtube-icon" />
+                      <h3 class="panel-title">Youtube account</h3>
                       <template v-if="elevatedChannelInfo">
-                        <p>Logged in as <b><a href="#" style="font-weight: bold;" 
-                          v-on:click.prevent="navigateChannel(elevatedChannelInfo)">{{ channelName(elevatedChannelInfo) }}</a></b></p>
-                        <button type="submit" class="btn btn-danger btn-fill" v-on:click.prevent="logout()">
+                        <p class="category">Account associated</p>
+                        <button type="submit" class="btn btn-md btn-disconnect" v-on:click.prevent="logout()">
                           Disconnect  
                         </button>
                       </template>
-                      <!-- Not logged in -->
                       <template v-else>
-                        <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="login()">
-                          Sign in with Google
+                        <p class="category">Not associated</p>
+                        <button type="submit" class="btn btn-success btn-connect" v-on:click.prevent="login()">
+                         Associate account
                         </button>
                       </template>
-                    </div> 
+                    </div>
+                    <!-- Logged in -->
+                    <div class="panel-body" v-if="elevatedChannelInfo">
+                      <p>Logged in as <b><a href="#" style="font-weight: bold;" 
+                        v-on:click.prevent="navigateChannel(elevatedChannelInfo)">{{ channelName(elevatedChannelInfo) }}</a></b></p>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Streamlabs -->
                 <div class="form-group">
-                  <div class="panel panel-default"> 
+                  <div class="panel panel-default panel-account panel-streamlabs"> 
                     <div class="panel-heading"> 
-                      <h3 class="panel-title">Steamlabs account</h3></div>
-                      <div class="panel-body">
-                        <!-- Logged in -->
-                        <template v-if="oauthStreamlabsToken">
-                          <p v-if="streamlabsAccountInfo">Logged in as <b>{{ streamLabsName(streamlabsAccountInfo) }}</b></p>
-                          <button type="submit" class="btn btn-danger btn-fill" v-on:click.prevent="logoutStreamlabs()">
-                            Disconnect
-                          </button> 
-                        </template>
-                        <!-- Not logged in -->
-                        <template v-else>
-                          <p>Your account is not currently associated.</b></p>
-                          <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="loginStreamlabs()">
-                              Sign in with Steamlabs
-                            </button>
-                          </div>
-                        </template>
-                      </div>
-                    </div> 
+                      <img src="~@/assets/streamlabs.svg" alt="" class="streamlabs-icon" />
+                      <h3 class="panel-title">Steamlabs account</h3>
+                      <template v-if="oauthStreamlabsToken">
+                        <p class="category">Account associated</p>
+                        <button type="submit" class="btn btn-md btn-disconnect" v-on:click.prevent="logoutStreamlabs()">
+                         Disconnect
+                        </button> 
+                      </template>
+                      <template v-else>
+                        <p class="category">Not associated</p>
+                        <button type="submit" class="btn btn-success btn-connect" v-on:click.prevent="loginStreamlabs()">
+                         Associate account
+                        </button>
+                      </template>
+                    </div>
+                    <!-- Logged in -->
+                    <div class="panel-body" v-if="oauthStreamlabsToken">
+                      <p v-if="streamlabsAccountInfo">Logged in as <b>{{ streamLabsName(streamlabsAccountInfo) }}</b></p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -130,7 +130,9 @@ export default {
       });
     },
     logout() {
-      signOutGoogleApi();
+      if (confirm("Disconnect Youtube account?")) {
+        signOutGoogleApi();
+      }
     },
     channelName(channelInfo) {
       return channelInfo.brandingSettings.channel.title;
@@ -139,7 +141,9 @@ export default {
       return account.streamlabs.display_name;
     },
     logoutStreamlabs() {
-      signOutStreamlabsApi();
+      if (confirm("Disconnect Streamlabs account?")) {
+        signOutStreamlabsApi();
+      }
     },
     navigateChannel(channelInfo) {
       var url = `https://www.youtube.com/channel/${channelInfo.id}`;

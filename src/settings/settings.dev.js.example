@@ -2,6 +2,9 @@
 export default {
   "clientId" : "CLIENT_ID",
   "clientSecret" : "CLIENT_SECRET",
+  
+  "streamLabsClientId" : "CLIENT_ID",
+  "streamLabsClientSecret" : "CLIENT_SECRET",
 
   "smtpHost" : "SMTP_HOST",
   "smtpLogin" : "SMTP_USER",

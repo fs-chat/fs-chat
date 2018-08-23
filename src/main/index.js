@@ -152,8 +152,8 @@ function createWindow () {
 
   ipcMain.on('login-streamlabs', function(event, { scope }) {
     const config = {
-      client_id: "DxzGog2BUHOc2BzOCKLBFZSHDvL6mxk6jENAwwTL",
-      client_secret: "odvMdIJCxKN3LughvsFjr1uhlFJIex51uW8bBnRg",
+      client_id: __settings.streamLabsClientId,
+      client_secret: __settings.streamLabsClientSecret,
       scope: scope,
       response_type: "code",
       redirect_uri: "http://127.0.0.1",
@@ -179,10 +179,6 @@ function createWindow () {
     const provider = new OAuth2Provider(config);
     provider.perform(window)
       .then(resp => {
-
-        // Logged in
-        console.log(resp);
-
         window.close();
         mainWindow.webContents.send("login-streamlabs-result", {
           token: resp

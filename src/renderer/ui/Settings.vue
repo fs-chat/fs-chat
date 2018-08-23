@@ -43,7 +43,7 @@
                   <div class="panel panel-default panel-account panel-streamlabs"> 
                     <div class="panel-heading"> 
                       <img src="~@/assets/streamlabs.svg" alt="" class="streamlabs-icon" />
-                      <h3 class="panel-title">Steamlabs account</h3>
+                      <h3 class="panel-title">Streamlabs account</h3>
                       <template v-if="oauthStreamlabsToken">
                         <p class="category">Account associated</p>
                         <button type="submit" class="btn btn-md btn-disconnect" v-on:click.prevent="logoutStreamlabs()">

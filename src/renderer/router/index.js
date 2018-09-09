@@ -33,6 +33,11 @@ export default new Router({
           path: 'about',
           name: 'About',
           component: require('@/ui/About').default,
+        },
+        {
+          path: 'test-udp',
+          name: 'TestUdp',
+          component: require('@/ui/TestUdp').default,
         }
       ]
     },

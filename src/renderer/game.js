@@ -273,22 +273,18 @@ var Game = {
     }
   },
   /**
-   * Create listeners for external API (Dan Berry's plugin)
+   * Receives messages from external API (Dan Berry's plugin)
    */
-  createEndpointListeners() {
-    // (External endpoint) Reset results 
-    // See: src/express/server.js
-    ipcRenderer.on('external-clear-results', function(event) {
+  receiveExternalMessage(rate) {
+    if (rate == 'reset') {
       console.log("Rate: Reset");
       Game.resetGame();
-    });
-
-    // (External endpoint) Set a final landing rate
-    // See: src/express/server.js
-    ipcRenderer.on('external-compile-results', function(event, { rate }) {
+    }
+    else {
       console.log("Rate: " + rate);
       var token = store.state.oauthElevatedToken;
       var liveChatID = store.state.liveChatID;
+
       if (token && liveChatID && !isNaN(parseFloat(rate)) && isFinite(rate)) {
         Game.setLandingTime(new Date());
         Game.compileResults(rate);
@@ -309,10 +305,25 @@ var Game = {
           console.log("No results to show.");
         }
       } else {
-        console.log("Token or liveChatID invalid not set..");
-        console.log(token);
-        console.log(rate);
+        // console.log(token);
+        // console.log(rate);
       }
+    }
+  },
+  /*
+   * Express server fallback.
+   */
+  createEndpointListeners() {
+    // (External endpoint) Reset results 
+    // See: src/express/server.js
+    ipcRenderer.on('external-clear-results', function(event) {
+      Game.receiveExternalMessage("reset");
+    });
+
+    // (External endpoint) Set a final landing rate
+    // See: src/express/server.js
+    ipcRenderer.on('external-compile-results', function(event, { rate }) {
+      Game.receiveExternalMessage(rate);
     });
   }
 };

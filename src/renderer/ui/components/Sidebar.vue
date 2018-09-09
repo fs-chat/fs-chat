@@ -20,6 +20,12 @@
 						<p>Leaderboard</p>
 					</a>
 				</router-link>
+				<router-link :to="{name:'TestUdp'}" tag="li" active-class="active">	
+					<a>
+						<i class="pe-7s-repeat"></i>
+						<p>Test UDP</p>
+					</a>
+				</router-link>
 				<router-link to="/settings" tag="li" active-class="active">	
 					<a>
 						<i class="pe-7s-config"></i>

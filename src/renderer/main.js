@@ -82,6 +82,15 @@ Game.createEndpointListeners();
 // Init local database
 initDatabase();
 
+// UDP External API endpoint
+ipcRenderer.on('receive-udp-message', function(event, data) {
+  var msg = new TextDecoder("utf-8").decode(data.msg);
+  console.log(data);
+  console.log(msg);
+
+  Game.receiveExternalMessage(msg);
+});
+
 // Tray destroy handler
 var mainWindow = remote.getCurrentWindow();
 mainWindow.tray = tray;

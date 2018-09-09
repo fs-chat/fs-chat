@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { OAuth2Provider } from 'electron-oauth-helper'
+import dgram from 'dgram'
 import path from 'path'
 
 import expressInit from '../express/server.js'
@@ -191,6 +192,34 @@ function createWindow () {
 
   // Start express server for external landing endpoint
   expressInit(mainWindow);
+
+  // Start listening for UDP
+  const server = dgram.createSocket('udp4');
+  server.on('error', (err) => {
+    console.log(`server error:\n${err.stack}`);
+    server.close();
+  });
+
+  server.on('message', (msg, rinfo) => {
+    mainWindow.webContents.send("receive-udp-message", {
+      msg, rinfo
+    });
+  });
+
+  server.on('listening', () => {
+    const address = server.address();
+    console.log(`server listening ${address.address}:${address.port}`);
+  });
+
+  server.bind(4501);
+
+  ipcMain.on('send-udp-message', function(event, { msg }) {
+    const message = Buffer.from(msg);
+    const client = dgram.createSocket('udp4');
+    client.send(message, 4501, 'localhost', (err) => {
+      client.close();
+    });
+  });
 }
 
 app.on('ready', createWindow)

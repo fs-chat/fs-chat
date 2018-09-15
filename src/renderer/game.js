@@ -93,7 +93,7 @@ var Game = {
           // Check time validity before landing
           if (diffMinutes < minutesSetting) {
             var channelId = comment.snippet.authorChannelId;
-            var message = comment.snippet.textMessageDetails.messageText;
+            var message = comment.snippet.textMessageDetails.messageText.replace(',','.');
 
             var placeBet = false;
             var deleteBetIndex = null;
@@ -185,7 +185,9 @@ var Game = {
       var result = results[i];
       var diffValue = result.diff;
 
-      if (diffValue == lastDiff) rank = lastRank;
+      var sameDiff = (diffValue == lastDiff);
+      if (sameDiff) rank = lastRank;
+      result.isMedal = (rank <= 3 && (i < 3 || sameDiff));
       result.rank = rank;
 
       lastRank = rank;
@@ -198,7 +200,7 @@ var Game = {
           precision: diffValue,
           message: result.comment.snippet.textMessageDetails.messageText,
           date: nowDate,
-          isMedal: (rank <= 3 && i < 3),
+          isMedal: result.isMedal,
           rank: rank,
           user: {
             channelId: result.comment.authorDetails.channelId,
@@ -250,11 +252,15 @@ var Game = {
       }
 
       // Construct results string
-      for (var i = 0; (i < results.length && i < 3); i++) {
+      for (var i = 0; (i < results.length); i++) {
         var result = results[i];
-        var medal = medalEmojis[result.rank-1];
-        winnerTextArr.push(`${medal} ${result.comment.authorDetails.displayName}, -${result.value} fpm `+
-          `(${diffText(result.diffReal)})`)
+        if (result.isMedal) {
+          var medal = medalEmojis[result.rank-1];
+          winnerTextArr.push(`${medal} ${result.comment.authorDetails.displayName}, -${result.value} fpm `+
+            `(${diffText(result.diffReal)})`)
+        } else {
+          break;
+        }
       }
 
       return winnerTextArr.join(' || ');

@@ -103,6 +103,7 @@ export function signInStreamlabsApi(token, save=true) {
     else {
       var accountInfo = JSON.parse(body);
       if (accountInfo) {
+        console.log(accountInfo);
         store.commit('setStreamlabsAccountInfo', accountInfo);
       }
     }

@@ -388,18 +388,18 @@ input:checked + .slider:before {
     background-color: #efefef;
 }    
 
-.vote-ending-messages,
-.vote-ending-messages table {
+.settings-table,
+.settings-table table {
   width: 100%;
 }
 
-.vote-ending-messages input {
+.settings-table input {
   border: 0 !important;
 }
-.vote-ending-messages td {
+.settings-table td {
   padding: 0 !important;
 }
-.vote-ending-messages a {
+.settings-table a {
   color: red;
   text-decoration: underline;
 }

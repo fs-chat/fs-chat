@@ -126,7 +126,7 @@ export default {
     loginStreamlabs() {
       var self = this;
       ipcRenderer.send("login-streamlabs", { 
-        scope: "" // space separated scopes
+        scope: "points.read points.write"
       });
     },
     logout() {

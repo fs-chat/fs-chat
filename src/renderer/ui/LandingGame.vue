@@ -8,6 +8,10 @@
             <p class="category">Information will show here about the state of the contest.</p>
 
             <div class="pull-right">
+              <a href="#" class="btn btn-simple btn-link btn-icon" tag="button" 
+                  v-on:click.prevent="testStreamLabs()">  
+                <i class="fa fa-flask"></i>
+              </a>
               <a href="#" class="btn btn-simple btn-link btn-icon" tag="button" v-if="streamVideoId" title="Edit channel URL" 
                   v-on:click.prevent="editStreamUrl()">  
                 <i class="fa fa-pencil-square-o"></i>
@@ -74,6 +78,9 @@
                           </button>
                           <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="copyResultTxt()">
                             Copy to clipboard
+                          </button>
+                          <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="rewardStreamlabs()">
+                            Reward currency
                           </button>
                           <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="postResults()">
                             Post results
@@ -146,6 +153,7 @@ import { ipcRenderer, shell } from 'electron'
 
 import { Session } from '../main'
 import YoutubeAPI from '../youtube_api'
+import StreamlabsAPI from '../streamlabs_api'
 import Game from '../game'
   
 import storage from 'electron-json-storage'
@@ -288,6 +296,11 @@ export default {
         Game.postResultsChat(this.$store.state.oauthElevatedToken);
       }
     },
+    rewardStreamlabs () {
+      if (confirm("Reward streamlabs currency?")) {
+        Game.rewardStreamlabsPoints();
+      }
+    },
     diffLanding (value, actual) {
       var diff = value - actual;
       if (diff == 0) return 'Exact value!';
@@ -309,6 +322,10 @@ export default {
         this.$store.commit('clearStream');
       }
     },
+
+    testStreamLabs() {
+      StreamlabsAPI.readPoints();
+    }
   },
   watch: {
     // External value change

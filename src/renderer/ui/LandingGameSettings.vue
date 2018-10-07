@@ -40,7 +40,7 @@
 
                 <div class="form-group">
                   <label>Vote ending messages <a href="#" v-on:click.prevent="addEndMessage()">(Add)</a></label>
-                  <div class="input-group vote-ending-messages">
+                  <div class="input-group settings-table">
                     <table class="table table-bordered"> 
                       <tbody> 
                         <tr v-for="(message, i) in game_settings.vote_end_messages"> 
@@ -56,12 +56,35 @@
                   </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom: 5px;">
                   <label>Rounded final rate value?</label><br>
                   <label class="switch">
                     <input type="checkbox" v-model="game_settings.rounded_rate">
                     <span class="slider round"></span>
                   </label>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                  <label>Streamlabs currency payouts</label>
+                  <div class="input-group settings-table">
+                    <table class="table table-bordered"> 
+                      <tbody> 
+                        <tr> 
+                          <td class="text-center"> 1st place </td>
+                          <td> <input type="number" class="form-control" v-model="game_settings.streamlabs_payouts[1]"> </td>
+                        </tr> 
+                        <tr> 
+                          <td class="text-center"> 2nd place </td>
+                          <td> <input type="number" class="form-control" v-model="game_settings.streamlabs_payouts[2]"> </td>
+                        </tr> 
+                        <tr> 
+                          <td class="text-center"> 3rd place </td>
+                          <td> <input type="number" class="form-control" v-model="game_settings.streamlabs_payouts[3]"> </td>
+                        </tr> 
+                      </tbody>
+                    </table>
+                    <div class="invalid-feedback" v-if="endMessagesError">{{ endMessagesError }}</div>
+                  </div>
                 </div>
 
                 <div class="form-group">

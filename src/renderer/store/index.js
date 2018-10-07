@@ -15,7 +15,12 @@ export const DEFAULT_SETTINGS = {
     rounded_rate: false,
     vote_end_messages: [
       'EVERYONE: Voting for the landing rate has been closed. Good luck!'
-    ]
+    ],
+    streamlabs_payouts: {
+      1: 500,
+      2: 250,
+      3: 100
+    }
   }
 };
 

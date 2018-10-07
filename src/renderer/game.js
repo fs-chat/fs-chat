@@ -3,6 +3,7 @@ import moment from 'moment'
 
 import store from './store'
 import YoutubeAPI from './youtube_api';
+import StreamlabsAPI from './streamlabs_api';
 
 // Betting modes
 export const GAME_MODES = {
@@ -266,6 +267,33 @@ var Game = {
       return winnerTextArr.join(' || ');
     } else {
       return '';
+    }
+  },
+  /**
+   * Award points to the winners by rank.
+   */
+  rewardStreamlabsPoints() {
+    var results = store.state.results;
+    var gameSettings = store.state.settings.game_settings;
+
+    if (results) {
+      var userPoints = {};
+      for (var i = 0; (i < results.length); i++) {
+        var result = results[i];
+        if (result.isMedal) {
+          var payout = parseInt(gameSettings.streamlabs_payouts[result.rank]);
+          var channelId = result.comment.authorDetails.channelId;
+          if (payout) {
+            userPoints[channelId] = payout;
+          }
+        } else {
+          break;
+        }
+      }
+
+      if (Object.keys(userPoints).length > 0) {
+        StreamlabsAPI.rewardPoints(userPoints);
+      }
     }
   },
   /**

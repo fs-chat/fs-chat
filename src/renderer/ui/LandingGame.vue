@@ -194,7 +194,8 @@ export default {
       'settings'
     ]),
     resultsText() {
-      return Game.resultsToText();
+      var results = Game.resultsToText();
+      return (results) ? results.fullMsg : '';
     }
   },
   methods: {

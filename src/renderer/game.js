@@ -263,9 +263,36 @@ var Game = {
         }
       }
 
-      return winnerTextArr.join(' || ');
+      // Split the message to fit within youtube limit
+      const LIMIT_CHARS = 190;
+      var splittedMsg = [];
+      var currentLength = 0;
+      var currentIndex = 0;
+
+      for (var i = 0; i < winnerTextArr.length; i++) {
+        var msg = winnerTextArr[i];
+        var msgLength = msg.length+4;
+        currentLength += msgLength;
+
+        if (currentLength > LIMIT_CHARS) {
+          currentIndex++;
+          currentLength = msgLength;
+        }
+
+        while (splittedMsg.length < currentIndex + 1) splittedMsg.push([]);
+        splittedMsg[currentIndex].push(msg);
+      }
+
+      // Join splitted messages together
+      splittedMsg = splittedMsg.map(msgs => msgs.join(' || '));
+      console.log(splittedMsg);
+
+      // Join full message unsplitted
+      var fullMsg = winnerTextArr.join(' || ');
+
+      return { fullMsg, splittedMsg };
     } else {
-      return '';
+      return null;
     }
   },
   /**
@@ -275,7 +302,16 @@ var Game = {
     var results = store.state.results;
     var liveChatID = store.state.liveChatID;
     if (token && results.length > 0 && liveChatID) {
-      YoutubeAPI.insertComment(liveChatID, Game.resultsToText()); 
+      var resultsTxt = Game.resultsToText();
+
+      // Post the splitted messages
+      if (resultsTxt && resultsTxt.splittedMsg) {
+        resultsTxt.splittedMsg.forEach((msg, index) => {
+          setTimeout(function() {
+            YoutubeAPI.insertComment(liveChatID, msg);
+          }, index*500);
+        });
+      }
     }
   },
   /**
@@ -300,7 +336,7 @@ var Game = {
         Game.compileResults(rate);
 
         if (store.state.results.length > 0) {
-          var resultText = Game.resultsToText();
+          var resultsTxt = Game.resultsToText();
 
           // Post results to chat but wait for stream delay
           var gameSettings = store.state.settings.game_settings;
@@ -309,7 +345,15 @@ var Game = {
 
           setTimeout(function () {
             console.log("=> Post results");
-            YoutubeAPI.insertComment(liveChatID, resultText); 
+
+            // Post the splitted messages
+            if (resultsTxt && resultsTxt.splittedMsg) {
+              resultsTxt.splittedMsg.forEach((msg, index) => {
+                setTimeout(function() {
+                  YoutubeAPI.insertComment(liveChatID, msg);
+                }, index*500);
+              });
+            }
           }, (secondsDelay * 1000));
         } else {
           console.log("No results to show.");

@@ -2,6 +2,7 @@ import { ipcRenderer } from 'electron'
 import moment from 'moment'
 
 import store from './store'
+import syncUtils from './sync_utils'
 import YoutubeAPI from './youtube_api';
 
 // Betting modes
@@ -220,6 +221,9 @@ var Game = {
 
     // This will trigger a refresh of the leaderboard page
     store.commit('setLeaderboardUpToDate', false);
+
+    // Update remote results if configured
+    syncUtils.sync_results();
   },
   /*
    * Reset results 

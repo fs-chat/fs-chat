@@ -65,6 +65,9 @@ export default new Vuex.Store({
     oauthStreamlabsToken: null,
     streamlabsAccountInfo: null,
 
+    // Sync API
+    syncApiToken: null,
+
     // Update info
     updateStatusText: "",
     updateNotificationSent: false,
@@ -198,6 +201,10 @@ export default new Vuex.Store({
     },
     setReadOnlyChannelInfo (state, info) {
       state.readOnlyChannelInfo = info;
+    },
+
+    setSyncApiToken (state, token) {
+      state.syncApiToken = token;
     },
 
     setUpdateDownloading (state, status) {

@@ -3,6 +3,7 @@ import storage from 'electron-json-storage'
 import request from 'request'
 
 import store from './store'
+import syncUtils from './sync_utils'
 
 import { google } from 'googleapis';
 var OAuth2 = google.auth.OAuth2;
@@ -26,6 +27,10 @@ export function importTokenStorage() {
       if (data.oauthStreamlabsToken){
         signInStreamlabsApi(data.oauthStreamlabsToken, false);
       }
+      if (data.syncApiToken){
+        store.commit('setSyncApiToken', data.syncApiToken);
+        syncUtils.sync_results();
+      }
     }
   });
 }
@@ -36,6 +41,7 @@ export function exportTokenStorage() {
     oauthElevatedToken: store.state.oauthElevatedToken,
     oauthReadOnlyToken: store.state.oauthReadOnlyToken,
     oauthStreamlabsToken: store.state.oauthStreamlabsToken,
+    syncApiToken: store.state.syncApiToken,
   });
 }
 

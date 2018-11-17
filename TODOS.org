@@ -1,6 +1,22 @@
 # Bot de compilation des résultats pour le pour le landing rate (CptCanada Youtube)
 
-* Créer une page Leaderboard
+* Sync du leaderboard
+** Serveur
+*** DONE Creer la table de resultats
+*** DONE Créer une route pour recevoir les résultats
+**** DONE Créer la route
+**** DONE Sauvegarder les résultats
+*** Afficher l'ensemble des résultats sans tri 
+**** DOING Modifier l'APPLI frontend (utiliser meals)
+*** Pouvoir trier les résultats comme dans le client
+** Client
+*** DONE Pouvoir sauvegarder un token de sync
+**** DONE Dans la page de paramètres généralisés
+*** DONE Envoyer les données
+**** DONE Obtenir les résultats non publiés
+**** DONE Vérifier au démarrage du programme
+
+* DONE Créer une page Leaderboard
 ** Phase d'expérimentation
 *** Installer LokiJS pour faire de la persistence de données indexés NoSql 
 *** Données de test l'affichage/sauvegarde/restauration
@@ -24,7 +40,6 @@
 ***** Or: 5.5
 ***** Argent: 2.5
 ***** Bronze: 1
-
 
 * DONE Modifier le fonctionnement du reset pour utiliser le dernier index au lieu d'une timestamp
   - La comparaison de dates semble entrainer des problèmes (voit seulment deux votes au lieu de 30..)

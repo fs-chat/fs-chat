@@ -63,6 +63,52 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- Sync -->
+                <div class="form-group">
+                  <div class="panel panel-default panel-account panel-streamlabs"> 
+                    <div class="panel-heading"> 
+                      <img src="~@/assets/sync.svg" alt="" class="streamlabs-icon" />
+                      <h3 class="panel-title">Leaderboard sync</h3>
+                      <template v-if="syncApiToken">
+                        <p class="category">Account associated</p>
+                        <button type="submit" class="btn btn-md btn-disconnect" v-on:click.prevent="unsetSyncId()">
+                         Disconnect
+                        </button> 
+                      </template>
+                      <template v-else>
+                        <p class="category">Not configured</p>
+                        <button type="submit" class="btn btn-success btn-connect" 
+                            v-on:click.prevent="configureSyncId()" v-if="!setSyncId">
+                         Configure sync
+                        </button>
+                      </template>
+                    </div>
+                    <!-- Panel body -->
+                    <template v-if="syncApiToken">
+                      <div class="panel-body">
+                        <p>Configured using <span style="text-decoration: underline; cursor: help;"
+                            :title="syncApiToken">sync id</span>.</p>
+                      </div>
+                    </template>
+                    <template v-if="!syncApiToken && setSyncId">
+                      <form v-on:submit.prevent="savePolitique()">
+                        <div class="panel-body">
+                          <div class="form-group">
+                            <label>Synchronisation ID</label>
+                            <input type="text" class="form-control" v-model="syncId" id="sync-id-input" 
+                              v-validate="'required'" name="sync_id" data-vv-as="Sync ID">
+                            <span v-show="errors.has('sync_id')" class="validation-error"> 
+                              {{ errors.first('sync_id') }}</span>                    
+                          </div>
+                          <button type="submit" class="btn btn-primary" v-on:click.prevent="saveSyncId()">
+                            Save sync ID
+                          </button>
+                        </div>
+                      </form>
+                    </template>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -75,13 +121,20 @@
 <script>
 import { mapState } from 'vuex'
 import storage from 'electron-json-storage'
+import syncUtils from '../sync_utils'
 import deepExtend from 'deep-extend'
-import { signOutGoogleApi, signOutStreamlabsApi } from '../auth'
 import { ipcRenderer, remote, shell } from 'electron'
+import { 
+  signOutGoogleApi, 
+  signOutStreamlabsApi,
+  exportTokenStorage
+} from '../auth'
 
 export default {
   data() {
     return {
+      setSyncId: false,
+      syncId: '',
       settings: {
         // ...
       }
@@ -102,7 +155,8 @@ export default {
     ...mapState([
       'elevatedChannelInfo',
       'oauthStreamlabsToken',
-      'streamlabsAccountInfo'
+      'streamlabsAccountInfo',
+      'syncApiToken',
     ]),
     nomUsager () {
     	var nomUsager = "";
@@ -148,6 +202,27 @@ export default {
     navigateChannel(channelInfo) {
       var url = `https://www.youtube.com/channel/${channelInfo.id}`;
       shell.openExternal(url);
+    },
+    configureSyncId() {
+      this.setSyncId = true;
+      setTimeout(function() {
+        $('#sync-id-input').focus();
+      }, 100);
+    },
+    saveSyncId() {
+      if (this.syncId.length > 0) {
+        // Save token and start sync
+        this.$store.commit('setSyncApiToken', this.syncId);
+        exportTokenStorage();
+        syncUtils.sync_results();
+      }
+    },
+    unsetSyncId() {
+      if (confirm("Disconnect from Sync?")) {
+        // Unset from store and export
+        this.$store.commit('setSyncApiToken', null);
+        exportTokenStorage();
+      }
     }
   }
 };

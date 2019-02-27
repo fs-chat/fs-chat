@@ -23,6 +23,9 @@ export default {
       // Used to limit requests to one at a time
       var q = queue({ concurrency: 1, autostart: true });
       q.on('timeout', function (next, job) { next(); });
+      q.on('end', function (result, job) {
+        store.commit('setSyncPercent', null);
+      })
 
       // Find results wich were not synced yet..
       var results = resultsDb.find({
@@ -36,6 +39,8 @@ export default {
         if (err) console.error(err);
         else {
           // Group by chunks of 100 to minimise requests
+          var total = results.length;
+          var completed = 0;
           var resultsChunks = arrayChunk(results, 100);
 
           for (var i = 0; i < resultsChunks.length; i++) {
@@ -87,8 +92,10 @@ export default {
                       "sync.synced": true 
                     } 
                   }, { multi: true }, function () {
-                    next();
+                    completed += chunk.length;
+                    store.commit('setSyncPercent', completed / total);
                     console.log(`Successfully synced ${chunk.length} results.`);
+                    next();
                   });
                 }
               });

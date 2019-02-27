@@ -71,7 +71,7 @@
                       <img src="~@/assets/sync.svg" alt="" class="streamlabs-icon" />
                       <h3 class="panel-title">Leaderboard sync</h3>
                       <template v-if="syncApiToken">
-                        <p class="category">Account associated</p>
+                        <p class="category">Enabled</p>
                         <button type="submit" class="btn btn-md btn-disconnect" v-on:click.prevent="unsetSyncId()">
                          Disconnect
                         </button> 
@@ -89,6 +89,9 @@
                       <div class="panel-body">
                         <p>Configured using <span style="text-decoration: underline; cursor: help;"
                             :title="syncApiToken">sync id</span>.</p>
+                          <template v-if="syncPercent">
+                            <i>Syncing in progress ({{ Math.round(syncPercent*100) }}%)</i>
+                          </template>
                       </div>
                     </template>
                     <template v-if="!syncApiToken && setSyncId">
@@ -102,7 +105,7 @@
                               {{ errors.first('sync_id') }}</span>                    
                           </div>
                           <button type="submit" class="btn btn-primary" v-on:click.prevent="saveSyncId()">
-                            Save sync ID
+                            Set sync ID
                           </button>
                         </div>
                       </form>
@@ -157,6 +160,7 @@ export default {
       'oauthStreamlabsToken',
       'streamlabsAccountInfo',
       'syncApiToken',
+      'syncPercent',
     ]),
     nomUsager () {
     	var nomUsager = "";

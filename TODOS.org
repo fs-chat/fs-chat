@@ -6,15 +6,28 @@
 *** DONE Créer une route pour recevoir les résultats
 **** DONE Créer la route
 **** DONE Sauvegarder les résultats
-*** Afficher l'ensemble des résultats sans tri 
-**** DOING Modifier l'APPLI frontend (utiliser meals)
-*** Pouvoir trier les résultats comme dans le client
+*** DONE Afficher l'ensemble des résultats sans tri 
+**** DONE Modifier l'APPLI frontend (utiliser meals)
+*** DONE Pouvoir trier les résultats comme dans le client
+*** DONE Pouvoir rechercher un utilisateur
+**** Conserver le rang des résultats en fonction du tri
+*** DONE Mettre en production
+**** NEXT Installer MySQL sur le serveur
+**** Installer PHP7
+*** TODO Sélectionner la période
+*** TODO Créer la table partie
+**** Créer un point d'entrée pour ajouter une partie
+*** Afficher les résultats par partie
+**** Dans une vue "today" diviser les gagnants par partie
 ** Client
 *** DONE Pouvoir sauvegarder un token de sync
 **** DONE Dans la page de paramètres généralisés
 *** DONE Envoyer les données
 **** DONE Obtenir les résultats non publiés
 **** DONE Vérifier au démarrage du programme
+**** DONE Afficher le pourcentage de transfert
+*** Créer une partie et obtenir l'ID
+**** Après l'atterissage, dans une premise
 
 * DONE Créer une page Leaderboard
 ** Phase d'expérimentation
@@ -40,7 +53,6 @@
 ***** Or: 5.5
 ***** Argent: 2.5
 ***** Bronze: 1
-
 * DONE Modifier le fonctionnement du reset pour utiliser le dernier index au lieu d'une timestamp
   - La comparaison de dates semble entrainer des problèmes (voit seulment deux votes au lieu de 30..)
 * DONE Self-Update

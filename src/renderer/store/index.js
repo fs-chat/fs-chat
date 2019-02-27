@@ -67,6 +67,7 @@ export default new Vuex.Store({
 
     // Sync API
     syncApiToken: null,
+    syncPercent: null,
 
     // Update info
     updateStatusText: "",
@@ -205,6 +206,9 @@ export default new Vuex.Store({
 
     setSyncApiToken (state, token) {
       state.syncApiToken = token;
+    },
+    setSyncPercent (state, percent) {
+      state.syncPercent = percent;
     },
 
     setUpdateDownloading (state, status) {

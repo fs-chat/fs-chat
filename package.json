@@ -1,6 +1,6 @@
 {
   "name": "fs-chat",
-  "version": "0.4.5",
+  "version": "0.5.1",
   "author": "Francis Bourassa <francis.bourassa@hotmail.fr>",
   "description": "Utils for youtube FlightSim streams. (CptCanada youtube)",
   "license": null,
@@ -48,7 +48,7 @@
       "icon": "build/icons/icon.ico",
       "publish": {
         "provider": "generic",
-        "url": "https://fs-chat.github.io/fs-chat.github.io"
+        "url": "http://cptcanada.com/client"
       }
     },
     "linux": {

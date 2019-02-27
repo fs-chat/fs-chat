@@ -223,7 +223,7 @@ var Game = {
     store.commit('setLeaderboardUpToDate', false);
 
     // Update remote results if configured
-    syncUtils.sync_results();
+    // syncUtils.sync_results();
   },
   /*
    * Reset results 

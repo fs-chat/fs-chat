@@ -204,6 +204,12 @@ function createWindow () {
     mainWindow.webContents.send("receive-udp-message", {
       msg, rinfo
     });
+
+    if (msg == 'ping') {
+      server.send('pong', UDP_PORT, 'localhost', (err) => {
+        // ...
+      });
+    }
   });
 
   server.on('listening', () => {
@@ -211,12 +217,13 @@ function createWindow () {
     console.log(`server listening ${address.address}:${address.port}`);
   });
 
-  server.bind(4501);
+  var UDP_PORT = global.__settings.udp_port || 7;
+  server.bind(UDP_PORT);
 
   ipcMain.on('send-udp-message', function(event, { msg }) {
     const message = Buffer.from(msg);
     const client = dgram.createSocket('udp4');
-    client.send(message, 4501, 'localhost', (err) => {
+    client.send(message, UDP_PORT, 'localhost', (err) => {
       client.close();
     });
   });

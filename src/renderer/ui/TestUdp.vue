@@ -16,7 +16,7 @@
                 </div>
                 <div class="form-group">
                   <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="sendMessage()">
-                    Send and receive on port 4501
+                    Send and receive on port {{ udpPort }}
                   </button>
                 </div>
 
@@ -40,6 +40,11 @@ export default {
   },
   created: function() {
     this.$store.commit('setTitle', "Test UDP");
+  },
+  computed: {
+    udpPort() {
+      return global.__settings.udp_port || 7;
+    }
   },
   methods: {
     sendMessage() {

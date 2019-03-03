@@ -20,7 +20,7 @@
 						<p>Leaderboard</p>
 					</a>
 				</router-link>
-				<router-link :to="{name:'TestUdp'}" tag="li" active-class="active">	
+				<router-link :to="{name:'TestUdp'}" tag="li" active-class="active" v-if="showUdp">	
 					<a>
 						<i class="pe-7s-repeat"></i>
 						<p>Test UDP</p>
@@ -42,7 +42,9 @@ import { mapState } from 'vuex'
 
 export default {
   computed: {
-    
+    showUdp() {
+    	return global.__settings.show_udp_dev==true;
+    }
   }
 };
 </script>

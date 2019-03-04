@@ -85,9 +85,7 @@ initDatabase();
 // UDP External API endpoint
 ipcRenderer.on('receive-udp-message', function(event, data) {
   var msg = new TextDecoder("utf-8").decode(data.msg);
-  console.log(data);
-  console.log(msg);
-
+  // console.log(data);
   Game.receiveExternalMessage(msg);
 });
 

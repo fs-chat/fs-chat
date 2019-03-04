@@ -19,7 +19,7 @@ if (process.env.NODE_ENV !== 'development') {
 } else {
   global.__settings = SETTINGS_DEV;
 }
-
+ 
 let mainWindow;
 
 let willQuitApp = false;

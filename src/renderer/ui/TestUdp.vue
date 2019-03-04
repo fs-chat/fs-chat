@@ -35,7 +35,7 @@ import { ipcRenderer, remote, shell } from 'electron'
 export default {
   data() {
     return {
-      testMessage: ""
+      testMessage: "gear=down"
     };
   },
   created: function() {

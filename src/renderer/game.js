@@ -319,48 +319,82 @@ var Game = {
     }
   },
   /**
+   * When the gear is down, reset game and notify the chat.
+   */
+  receiveGearDown() {
+    var gameSettings = store.state.settings.game_settings;
+    var results = store.state.results;
+    var liveChatID = store.state.liveChatID;
+    if (liveChatID) {
+      Game.resetGame();
+
+      var notifyMsg = gameSettings.open_bets_messages;
+      if (notifyMsg && notifyMsg.length > 0) {
+        YoutubeAPI.insertComment(liveChatID, notifyMsg);
+      }
+    }
+  },
+  /**
    * Receives messages from external API (Dan Berry's plugin)
    */
-  receiveExternalMessage(rate) {
-    if (rate == 'reset') {
-      console.log("Rate: Reset");
-      Game.resetGame();
-    }
-    else {
-      console.log("Rate: " + rate);
-      var token = store.state.oauthElevatedToken;
-      var liveChatID = store.state.liveChatID;
+  receiveExternalMessage(prmstr) {
+    var params = {};
+    var prmarr = prmstr.split("&");
+    for ( var i = 0; i < prmarr.length; i++) {
+      var arr = prmarr[i].split("=");
+      var param = arr[0];
+      var value = arr[1];
 
-      if (token && liveChatID && !isNaN(parseFloat(rate)) && isFinite(rate)) {
-        Game.setLandingTime(new Date());
-        Game.compileResults(rate);
+      if (param == "rate") {
+        let rate = value;
 
-        if (store.state.results.length > 0) {
-          var resultsTxt = Game.resultsToText();
-
-          // Post results to chat but wait for stream delay
-          var gameSettings = store.state.settings.game_settings;
-          var secondsDelay = gameSettings.stream_delay_sec || 15;
-          console.log("Wait " + secondsDelay + " seconds and post results...");
-
-          setTimeout(function () {
-            console.log("=> Post results");
-
-            // Post the splitted messages
-            if (resultsTxt && resultsTxt.splittedMsg) {
-              resultsTxt.splittedMsg.forEach((msg, index) => {
-                setTimeout(function() {
-                  YoutubeAPI.insertComment(liveChatID, msg);
-                }, index*500);
-              });
-            }
-          }, (secondsDelay * 1000));
-        } else {
-          console.log("No results to show.");
+        if (rate == 'reset') {
+          console.log("Rate: Reset");
+          Game.resetGame();
         }
-      } else {
-        // console.log(token);
-        // console.log(rate);
+        else {
+          console.log("Rate: " + rate);
+          var token = store.state.oauthElevatedToken;
+          var liveChatID = store.state.liveChatID;
+
+          if (token && liveChatID && !isNaN(parseFloat(rate)) && isFinite(rate)) {
+            Game.setLandingTime(new Date());
+            Game.compileResults(rate);
+
+            if (store.state.results.length > 0) {
+              var resultsTxt = Game.resultsToText();
+
+              // Post results to chat but wait for stream delay
+              var gameSettings = store.state.settings.game_settings;
+              var secondsDelay = gameSettings.stream_delay_sec || 15;
+              console.log("Wait " + secondsDelay + " seconds and post results...");
+
+              setTimeout(function () {
+                console.log("=> Post results");
+
+                // Post the splitted messages
+                if (resultsTxt && resultsTxt.splittedMsg) {
+                  resultsTxt.splittedMsg.forEach((msg, index) => {
+                    setTimeout(function() {
+                      YoutubeAPI.insertComment(liveChatID, msg);
+                    }, index*500);
+                  });
+                }
+              }, (secondsDelay * 1000));
+            } else {
+              console.log("No results to show.");
+            }
+          } else {
+            // console.log(token);
+            // console.log(rate);
+          }
+        }
+      } else if (param == "gear") {
+        let gearState = value;
+
+        if (gearState == "down") {
+          Game.receiveGearDown();
+        }
       }
     }
   },

@@ -223,7 +223,7 @@ var Game = {
     store.commit('setLeaderboardUpToDate', false);
 
     // Update remote results if configured
-    // syncUtils.sync_results();
+    syncUtils.sync_results();
   },
   /*
    * Reset results 
@@ -326,7 +326,7 @@ var Game = {
     var results = store.state.results;
     var liveChatID = store.state.liveChatID;
     if (liveChatID) {
-      Game.resetGame();
+      // Game.resetGame();
 
       var notifyMsg = gameSettings.open_bets_messages;
       if (notifyMsg && notifyMsg.length > 0) {

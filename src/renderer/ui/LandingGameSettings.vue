@@ -29,6 +29,16 @@
                 </div>
 
                 <div class="form-group">
+                  <label>Stream delay in seconds</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" v-model="game_settings.stream_delay_sec"
+                    v-validate="'required'" name="stream_delay_sec" data-vv-as="Stream delay">
+                    <span class="input-group-addon">seconds</span>
+                  </div>
+                  <span v-show="errors.has('stream_delay_sec')" class="validation-error">{{ errors.first('stream_delay_sec') }}</span>                    
+                </div>
+
+                <div class="form-group">
                   <label>Bets starting message</label>
                   <input type="text" class="form-control" v-model="game_settings.open_bets_messages"
                     v-validate="'required'" name="open_bets_messages" data-vv-as="Stream delay">

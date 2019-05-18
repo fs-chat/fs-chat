@@ -71,7 +71,7 @@ export default {
                 }
               }, function (error, response, body) {
                 if (error) { 
-                  interruptSync = true;
+                  // interruptSync = true;
                   next();
                 } else if (response.statusCode === 403) {
                   interruptSync = true;
@@ -101,7 +101,6 @@ export default {
               });
             });
           }
-          
         }
       });
     }

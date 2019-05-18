@@ -3,6 +3,27 @@ import { remote } from 'electron'
 import path from 'path'
 import email from 'emailjs';
 
+export function sendLogs() {
+  var server  = email.server.connect({
+    user:     global.__settings.smtpLogin, 
+    password: global.__settings.smtpPassword, 
+    host:     global.__settings.smtpHost, 
+    port:     587, 
+    tls:      true
+  });
+
+  var report = {
+    logs: console.logs,
+    errors: console.errors
+  };
+  server.send({
+    from:    `Debug FS CHAT <${global.__settings.smtpLogin}>`, 
+    to:      "Francis <francis.bourassa@hotmail.fr>",
+    subject: "BUG REPORT - FS CHAT",
+    text:    JSON.stringify(report, null, 2)
+  }, function(err, message) { console.log(err || message); });
+}
+
  /**
   * Tray icon handlers
   */ 
@@ -11,24 +32,7 @@ export let menu = remote.Menu.buildFromTemplate([
   {
     label: 'Send log report',
     click () {
-      var server  = email.server.connect({
-        user:     global.__settings.smtpLogin, 
-        password: global.__settings.smtpPassword, 
-        host:     global.__settings.smtpHost, 
-        port:     587, 
-        tls:      true
-      });
-
-      var report = {
-        logs: console.logs,
-        errors: console.errors
-      };
-      server.send({
-        from:    `Debug FS CHAT <${global.__settings.smtpLogin}>`, 
-        to:      "Francis <francis.bourassa@hotmail.fr>",
-        subject: "BUG REPORT - FS CHAT",
-        text:    JSON.stringify(report, null, 2)
-      }, function(err, message) { console.log(err || message); });
+      sendLogs();
     }
   },
   {
@@ -41,6 +45,7 @@ export let menu = remote.Menu.buildFromTemplate([
   {
     label: 'Quit',
     click () {
+      sendLogs();
       remote.app.quit();
     }
   }

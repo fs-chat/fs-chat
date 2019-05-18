@@ -222,8 +222,10 @@ var Game = {
     // This will trigger a refresh of the leaderboard page
     store.commit('setLeaderboardUpToDate', false);
 
-    // Update remote results if configured
-    syncUtils.sync_results();
+    // Update remote results
+    setTimeout(function() {
+      syncUtils.sync_results();
+    }, 40000);
   },
   /*
    * Reset results 

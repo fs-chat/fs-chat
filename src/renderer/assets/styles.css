@@ -1,3 +1,7 @@
+.container-after-titlebar {
+  
+}
+
 @media (min-width: 992px){
     .typo-line{
         padding-left: 140px;
@@ -86,6 +90,16 @@
 
 .places-buttons .btn{
     margin-bottom: 30px
+}
+
+.sidebar {
+  top: 30px;
+}
+.main-panel .navbar {
+  top: 30px;
+}
+.main-panel > .content {
+  top: 91px;
 }
 
 .sidebar-logo {

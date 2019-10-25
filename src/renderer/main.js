@@ -44,6 +44,12 @@ if (process.env.NODE_ENV == 'development') {
   }
 }
 
+const customTitlebar = require('custom-electron-titlebar');
+new customTitlebar.Titlebar({
+  menu: null,
+  backgroundColor: customTitlebar.Color.fromHex('#1a2035')
+});
+
 Updates.listenForUpdates();
 
 Vue.http = Vue.prototype.$http = axios

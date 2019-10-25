@@ -37,6 +37,8 @@ export default {
       console.log("Selecting video from URL.");
       onVideoIdFound(videoId);
     } else if (channelId) {
+
+      // 
       service.search.list({
         auth: auth,
         channelId: channelId,

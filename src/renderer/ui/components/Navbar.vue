@@ -1,19 +1,28 @@
 <template>
-	<nav class="navbar navbar-default navbar-fixed">
+	<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top">
     <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <h1 class="navbar-brand">{{ title }}</h1>
+      <div class="navbar-wrapper">
+        <a class="navbar-brand" href="javascript:void(0)">{{ title }}</a>
       </div>
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <!-- Change icon color when there is an update -->
-          <li class="">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="navbar-toggler-icon icon-bar"></span>
+        <span class="navbar-toggler-icon icon-bar"></span>
+        <span class="navbar-toggler-icon icon-bar"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)">
+              <i class="fa fa-info-circle"></i>
+              <p class="d-lg-none d-md-block">
+                Notifications
+              </p>
+            </a>
+          </li>
+
+          <!-- <li class="">
             <router-link to="/about" title="About" v-bind:class="{ 'has-update': hasUpdate }">  
               <i class="fa fa-info-circle"></i> <p class="hidden-lg hidden-md"></p>
             </router-link>
@@ -24,7 +33,7 @@
                 <img :src="channelPictureUrl(elevatedChannelInfo)">
               </div>
             </router-link>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="dark-edition">
     <div v-if="loading">
       <div class="splash-screen">
         <div class="v-container">
@@ -18,10 +18,10 @@
   import storage from 'electron-json-storage'
 
  	import './assets/js/jquery-3.2.1.min.js';
-  import './assets/js/bootstrap.min.js';
- 	import './assets/js/bootstrap-notify.js';
+  // import './assets/js/bootstrap.min.js';
+  // import './assets/js/light-bootstrap-dashboard.js'; 
+  import './assets/js/bootstrap-notify.js';
   import './assets/js/chartist.min.js';
-  import './assets/js/light-bootstrap-dashboard.js'; 
   import './assets/js/jquery.contextmenu.js'; 
 
   export default {
@@ -44,7 +44,7 @@
 </script>
 
 <style>
-  @import 'assets/css/bootstrap.min.css';
+  /*@import 'assets/css/bootstrap.min.css';*/
   @import 'assets/css/animate.min.css';
   @import 'assets/css/light-bootstrap-dashboard.css';
   @import 'assets/css/font-awesome.min.css';

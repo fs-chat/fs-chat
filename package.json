@@ -1,6 +1,6 @@
 {
   "name": "fs-chat",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "author": "Francis Bourassa <francis.bourassa@hotmail.fr>",
   "description": "Utils for youtube FlightSim streams. (CptCanada youtube)",
   "license": null,
@@ -61,6 +61,7 @@
     "axios": "^0.16.1",
     "body-parser": "^1.18.3",
     "clone-deep": "^4.0.0",
+    "custom-electron-titlebar": "^3.1.0",
     "deep-extend": "^0.6.0",
     "electron-google-oauth": "^2.0.0",
     "electron-json-storage": "^4.0.2",

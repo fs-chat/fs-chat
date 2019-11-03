@@ -3,9 +3,9 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card">
-          <div class="header">
-            <h4 class="title">Game status</h4>
-            <p class="category">Information will show here about the state of the contest.</p>
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">Game status</h4>
+            <p class="card-category">Information will show here about the state of the contest.</p>
 
             <div class="pull-right">
               <a href="#" class="btn btn-simple btn-link btn-icon" tag="button" v-if="streamVideoId" title="Edit channel URL" 
@@ -16,7 +16,7 @@
                   v-on:click.prevent="openVideoUrl()">  
                 <i class="fa fa-youtube-play"></i>
               </a>
-              <a href="#" class="btn btn-simple btn-link btn-icon" tag="button" v-if="liveChatID" title="Live chat popup" 
+              <a href="#" class="btn btn-simple btn-link btn-icon" tag="button" v-if="liveChatID" title="Live chat popup" -
                   v-on:click.prevent="openCommentsModal()">  
                 <i class="fa fa-comments-o"></i>
               </a>
@@ -25,111 +25,98 @@
               </router-link>
             </div>
           </div>
-          <!-- Needs to be logged in to the API -->
-          <div class="content" v-if="oauthElevatedToken">
-            <div class="row">
-              <div class="col-md-12" >
-                <!-- No stream selected -->
-                <div v-if="!liveChatID">
-                  <div class="form-group">
-                    <label>Paste the full channel or video URL 
-                      <a href="#" v-on:click.prevent="useOwnChannelUrl()">(Use own channel)</a></label>
-                    <input type="text" class="form-control" placeholder="https://www.youtube.com/channel/[...]" v-model="channelUrlField">
-                    <div v-bind:class="{ 'invalid-feedback': urlErrorMsg, 'valid-feedback': !urlErrorMsg }" v-if="urlErrorMsg">{{ urlErrorMsg }}</div>
-                  </div>
-                  <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="onSelectChannelUrl()">
-                      Select this channel
-                    </button>
-                  </div>
+          <div class="card-body">
+            <!-- No stream selected -->
+            <div v-if="!liveChatID">
+              <div class="form-group">
+                <label>Paste the full channel or video URL 
+                  <a href="#" v-on:click.prevent="useOwnChannelUrl()">(Use own channel)</a></label>
+                <input type="text" class="form-control" placeholder="https://www.youtube.com/channel/[...]" v-model="channelUrlField">
+                <div v-bind:class="{ 'invalid-feedback': urlErrorMsg, 'valid-feedback': !urlErrorMsg }" v-if="urlErrorMsg">{{ urlErrorMsg }}</div>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="onSelectChannelUrl()">
+                  Select this channel
+                </button>
+              </div>
+            </div>
+            <!-- Chat ID set, game started -->
+            <div v-else>
+              <!-- Before landing -->
+              <div v-if="!finalLandingTime">
+                <!-- Button stop bets (very close to landing) -->
+                <div class="form-group">
+                  <b>Current Stream: </b> {{ streamTitle }}
                 </div>
-                <!-- Chat ID set, game started -->
-                <div v-else>
-                  <!-- Before landing -->
-                  <div v-if="!finalLandingTime">
-                    <!-- Button stop bets (very close to landing) -->
-                    <div class="form-group">
-                      <b>Current Stream: </b> {{ streamTitle }}
-                    </div>
 
+                <div class="form-group">
+                  <button class="btn btn-danger btn-fill btn-stop-bets" v-on:click.prevent="setLandingTimeNow()"
+                      data-toggle="tooltip" data-placement="right" title="This is done automatically by   Dan Berry's plugin">
+                    Stop accepting bets
+                  </button>
+                </div>
+              </div>
+              
+              <!-- After landing -->
+              <div v-if="finalLandingTime">
+                <div v-if="bets.length > 0">
+                  <div v-if="results.length > 0">
+                    <!-- Game results  -->
+                    <textarea rows="2" id="final-results" class="form-control" v-model="resultsText"></textarea>
+
+                    <!-- Button to clear/post results -->
                     <div class="form-group">
-                      <button class="btn btn-danger btn-fill btn-stop-bets" v-on:click.prevent="setLandingTimeNow()"
-                          data-toggle="tooltip" data-placement="right" title="This is done automatically by   Dan Berry's plugin">
-                        Stop accepting bets
+                      <button type="submit" class="btn btn-danger btn-fill" v-on:click.prevent="clearResults()">
+                        Clear results
+                      </button>
+                      <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="copyResultTxt()">
+                        Copy to clipboard
+                      </button>
+                      <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="postResults()">
+                        Post results
+                      </button>
+                    </div><br>
+                  </div>
+                  <div>
+                    <div class="form-group">
+                      <label>Final landing rate (actual value)</label>
+                      <input type="text" class="form-control" v-model="finalLandingRateField">
+                    </div>
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="compileResults()">
+                        <span>Compile results</span>
+                      </button>
+                      <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="unsetLandingTime()">
+                        Re-open bets
                       </button>
                     </div>
                   </div>
-                  
-                  <!-- After landing -->
-                  <div v-if="finalLandingTime">
-                    <div v-if="bets.length > 0">
-                      <div v-if="results.length > 0">
-                        <!-- Game results  -->
-                        <textarea rows="2" id="final-results" class="form-control" v-model="resultsText"></textarea>
 
-                        <!-- Button to clear/post results -->
-                        <div class="form-group">
-                          <button type="submit" class="btn btn-danger btn-fill" v-on:click.prevent="clearResults()">
-                            Clear results
-                          </button>
-                          <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="copyResultTxt()">
-                            Copy to clipboard
-                          </button>
-                          <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="postResults()">
-                            Post results
-                          </button>
-                        </div><br>
-                      </div>
-                      <div>
-                        <div class="form-group">
-                          <label>Final landing rate (actual value)</label>
-                          <input type="text" class="form-control" v-model="finalLandingRateField">
-                        </div>
-                        <div class="form-group">
-                          <button type="submit" class="btn btn-primary btn-fill" v-on:click.prevent="compileResults()">
-                            <span>Compile results</span>
-                          </button>
-                          <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="unsetLandingTime()">
-                            Re-open bets
-                          </button>
-                        </div>
-                      </div>
+                  <!-- List of bets un-ordred bets -->
+                  <ul class="list-group landing-bets-list">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" v-for="(bet, index) in bets"
+                        v-on:click.prevent="deleteBet(bet,index)">
+                      <img :src="bet.comment.authorDetails.profileImageUrl" alt="" class="profile-image">
+                      <span class="profile-name">{{ bet.comment.authorDetails.displayName }}</span>
+                      <span class="badge badge-secondary badge-pill rate-badge">- {{ bet.value }}</span>
+                    </li>
+                  </ul>
+                </div>
+                <div v-else>
+                  <div class="form-group" v-if="resetIndex != 0">
+                    <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes or since the last landing.</i>
+                      <a href="#" v-on:click.prevent="clearResetIndex()">Click here to disregard reset time.</a><br>
+                  </div>
+                  <div class="form-group" v-else>
+                    <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes.</i>
+                  </div>
 
-                      <!-- List of bets un-ordred bets -->
-                      <ul class="list-group landing-bets-list">
-                        <li class="list-group-item d-flex justify-content-between align-items-center" v-for="(bet, index) in bets"
-                            v-on:click.prevent="deleteBet(bet,index)">
-                          <img :src="bet.comment.authorDetails.profileImageUrl" alt="" class="profile-image">
-                          <span class="profile-name">{{ bet.comment.authorDetails.displayName }}</span>
-                          <span class="badge badge-secondary badge-pill rate-badge">- {{ bet.value }}</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div v-else>
-                      <div class="form-group" v-if="resetIndex != 0">
-                        <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes or since the last landing.</i>
-                          <a href="#" v-on:click.prevent="clearResetIndex()">Click here to disregard reset time.</a><br>
-                      </div>
-                      <div class="form-group" v-else>
-                        <i>There were no bets in the last {{ settings.game_settings.minutes_before }} minutes.</i>
-                      </div>
-
-                      <div class="form-group">
-                        <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="unsetLandingTime()">
-                          Click here to go back
-                        </button>
-                      </div>
-                    </div>
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-default btn-fill" v-on:click.prevent="unsetLandingTime()">
+                      Click here to go back
+                    </button>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <!-- Not logged in -->
-          <div class="content" v-else>
-            <div class="row">
-              <div class="col-md-12" >
-                <i>You must associate a <router-link to="/settings">Youtube account</router-link> to use this functionality.</i>
               </div>
             </div>
           </div>
@@ -161,10 +148,10 @@ export default {
     };
   },
   mounted: function() {
-    $('body').tooltip({
-      selector: '.btn-stop-bets',
-      delay: 0
-    });
+    // $('body').tooltip({
+    //   selector: '.btn-stop-bets',
+    //   delay: 0
+    // });
   },
   created: function() {
     var self = this;

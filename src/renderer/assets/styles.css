@@ -1,5 +1,5 @@
-.container-after-titlebar {
-  
+.wrapper {
+  height: calc(100vh - 30px);
 }
 
 @media (min-width: 992px){
@@ -67,6 +67,10 @@
     left: 260px;
     right: 0;
     top: 0;
+}
+
+.navbar .navbar-brand {
+  color: #d0caca;
 }
 
 .card .content {
@@ -185,29 +189,6 @@ table {
     position: absolute;
     right: 27px;
     top: 12px;
-}
-
-/* Let's get this party started */
-::-webkit-scrollbar {
-  width: 10px; /* 1px wider than Lion. */
-  /* This is more usable for users trying to click it. */
-  background-color: rgba(0,0,0,0);
-  -webkit-border-radius: 100px;
-}
-
-/* hover effect for both scrollbar area, and scrollbar 'thumb' */
-::-webkit-scrollbar:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-/* The scrollbar 'thumb' ...that marque oval shape in a scrollbar */
-::-webkit-scrollbar-thumb:vertical {
-    background: rgba(0,0,0,0.1);
-    -webkit-border-radius: 100px;
-}
-::-webkit-scrollbar-thumb:vertical:active {
-  background: rgba(0,0,0,0.61); /* Some darker color when you click it */
-  -webkit-border-radius: 100px;
 }
 
 .splash-screen {

@@ -20,6 +20,8 @@ import storage from 'electron-json-storage'
 
 import VeeValidate from 'vee-validate';
 
+window.jQuery = window.$ = require('jquery/dist/jquery.min');
+
 // Logging utils
 console.logs = [];
 console.errors = [];

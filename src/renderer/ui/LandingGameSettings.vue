@@ -3,10 +3,10 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card">
-          <div class="header">
-            <h4 class="title">Game settings</h4> 
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">Game settings</h4> 
           </div>
-          <div class="content">
+          <div class="card-body">
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
@@ -23,7 +23,9 @@
                   <div class="input-group">
                   <input type="number" class="form-control" v-model="game_settings.minutes_before"
                     v-validate="'required'" name="minutes_before" data-vv-as="Minutes">
-                    <span class="input-group-addon">minutes</span>
+                    <div class="input-group-append">
+                      <label class="input-group-text">minutes</label>
+                    </div>
                   </div>
                   <span v-show="errors.has('minutes_before')" class="validation-error">{{ errors.first('minutes_before') }}</span>
                 </div>
@@ -33,7 +35,9 @@
                   <div class="input-group">
                     <input type="number" class="form-control" v-model="game_settings.stream_delay_sec"
                     v-validate="'required'" name="stream_delay_sec" data-vv-as="Stream delay">
-                    <span class="input-group-addon">seconds</span>
+                    <div class="input-group-append">
+                      <label class="input-group-text">seconds</label>
+                    </div>
                   </div>
                   <span v-show="errors.has('stream_delay_sec')" class="validation-error">{{ errors.first('stream_delay_sec') }}</span>                    
                 </div>

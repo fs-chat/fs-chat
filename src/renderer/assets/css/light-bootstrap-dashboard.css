@@ -4004,8 +4004,8 @@ tbody.collapse.show {
 .input-group>.input-group-append:not(:last-child)>.input-group-text,
 .input-group>.input-group-append:last-child>.btn:not(:last-child):not(.dropdown-toggle),
 .input-group>.input-group-append:last-child>.input-group-text:not(:last-child) {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 .input-group>.input-group-append>.btn,
@@ -4014,8 +4014,8 @@ tbody.collapse.show {
 .input-group>.input-group-prepend:not(:first-child)>.input-group-text,
 .input-group>.input-group-prepend:first-child>.btn:not(:first-child),
 .input-group>.input-group-prepend:first-child>.input-group-text:not(:first-child) {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
 
 .custom-control {

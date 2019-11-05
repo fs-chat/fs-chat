@@ -3,11 +3,11 @@
   	<div class="row">
 	    <div class="col-md-12">
         <div class="card">
-          <div class="header">
-            <h4 class="title">Application settings</h4> 
-            <p class="category">Associate external accounts</p>
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">Application settings</h4> 
+            <p class="card-category">Associate external accounts</p>
           </div>
-          <div class="content">
+          <div class="card-body">
             <div class="row">
               <!-- Google API -->
               <div class="col-md-12">

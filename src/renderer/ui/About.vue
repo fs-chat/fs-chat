@@ -3,10 +3,10 @@
   	<div class="row">
 	    <div class="col-md-12">
         <div class="card">
-          <div class="header">
-            <h4 class="title">About</h4>
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">About</h4>
           </div>
-          <div class="content">
+          <div class="card-body">
             <p>
               Version: <b>{{ currentVersion }}</b><br>
               <i>{{ updateStatusText }}</i>

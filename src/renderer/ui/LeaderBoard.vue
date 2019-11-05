@@ -3,14 +3,14 @@
   	<div class="row">
 	    <div class="col-md-12">
         <div class="card">
-          <div class="header">
-            <h4 class="title">Leaderboard</h4> 
-            <p class="category">Sort users by their stats.</p>
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">Leaderboard</h4> 
+            <p class="card-category">Sort users by their stats.</p>
 
             <div class="pull-right">
               <div class="input-group" style="margin-top: 10px;" v-bind:style="{ width: (debug ? 370 : 270) + 'px' }">
                 <!-- Debug utils, flush and update manually -->
-                <span class="input-group-btn" v-if="debug">
+                <!-- <span class="input-group-btn" v-if="debug">
                   <button href="#" class="btn btn-default" tag="button" title="Clear resutls" 
                       v-on:click.prevent="clearResults()">  
                     <i class="fa fa-trash-o"></i>
@@ -19,9 +19,11 @@
                       v-on:click.prevent="updateLeaderboard()">  
                     <i class="fa fa-refresh"></i>
                   </button>
-                </span>
-                <span class="input-group-addon">Results from</span>
-                <select class="form-control no-focus" v-model="time_since">
+                </span> -->
+                <div class="input-group-append">
+                    <label class="input-group-text" for="inputGroupSelect02">Options</label>
+                  </div>
+                <select class="custom-select" v-model="time_since">
                   <option value="all">All time</option>
                   <option value="today">Today</option>
                   <option value="1W">Last 7 days</option>
@@ -34,7 +36,7 @@
               </div>
             </div>
           </div>
-          <div class="content">
+          <div class="card-body">
             <div class="row">
               <div class="col-md-12">
                 <!-- Test utils to generate data -->

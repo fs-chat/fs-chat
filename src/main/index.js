@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { OAuth2Provider } from 'electron-oauth-helper'
+import ElectronGoogleOAuth2 from '@getstation/electron-google-oauth2';
 import dgram from 'dgram'
 import path from 'path'
 
@@ -26,8 +27,6 @@ let willQuitApp = false;
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
-
-const electronGoogleOauth = require('electron-google-oauth');
 
 let microscopeScope = null;
 
@@ -113,27 +112,18 @@ function createWindow () {
   });
 
   ipcMain.on('login-google', function(event, { scopes, type }) {
-    const googleOauth = electronGoogleOauth({
-      center: true,
-      width: 600,
-      height: 800,
-      show: true,
-      resizable: false,
-      autoHideMenuBar: true,
-      webPreferences: {
-        devTools : false,
-        nodeIntegration: false
-      }
-    });
-    googleOauth.getAccessToken(
-      scopes,
+    const myApiOauth = new ElectronGoogleOAuth2(
       __settings.clientId,
-      __settings.clientSecret
-    ).then((token) => {
-      mainWindow.webContents.send("login-google-result", {
-        type, token
+      __settings.clientSecret,
+      scopes
+    );
+   
+    myApiOauth.openAuthWindowAndGetTokens()
+      .then(token => {
+        mainWindow.webContents.send("login-google-result", {
+          type, token
+        });
       });
-    });
   });
 
   ipcMain.on('open-modal-external-url', function(event, { url, title='New widnow' }) {

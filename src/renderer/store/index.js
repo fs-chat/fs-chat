@@ -13,7 +13,7 @@ export const DEFAULT_SETTINGS = {
     minutes_before: 10,
     stream_delay_sec: 15,
     rounded_rate: false,
-    open_bets_messages: "EVERYONE: Opening bets for the landing rate guessing game, enter the rate below to guess! 🛬",
+    open_bets_messages: "EVERYONE: Opening bets for the landing rate guessing game, enter the rate bellow to guess! 🛬",
     vote_end_messages: [
       'EVERYONE: Voting for the landing rate has been closed. Good luck!'
     ]

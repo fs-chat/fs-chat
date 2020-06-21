@@ -4,6 +4,7 @@ import { OAuth2Provider } from 'electron-oauth-helper'
 import ElectronGoogleOAuth2 from '@getstation/electron-google-oauth2';
 import dgram from 'dgram'
 import path from 'path'
+import rimraf from 'rimraf'
 
 import expressInit from '../express/server.js'
 
@@ -110,6 +111,14 @@ function createWindow () {
     mainWindow.webContents.send("updateStatusMessage", `Update downloaded. ${info.version}`);
     mainWindow.webContents.send("updateDownloaded", true);
   });
+
+  const userDataPath = app.getPath(
+    'userData'
+  );
+
+  // Remove installer files
+  rimraf(userDataPath + '/*.exe', function () { console.log('done'); });
+  console.log(userDataPath);
 
   ipcMain.on('login-google', function(event, { scopes, type }) {
     const myApiOauth = new ElectronGoogleOAuth2(

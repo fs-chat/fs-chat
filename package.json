@@ -1,6 +1,6 @@
 {
   "name": "fs-chat",
-  "version": "0.6.9",
+  "version": "0.6.10",
   "author": "Francis Bourassa <francis.bourassa@hotmail.fr>",
   "description": "Utils for youtube FlightSim streams. (CptCanada youtube)",
   "license": null,
@@ -78,6 +78,7 @@
     "nedb": "^1.8.0",
     "queue": "^4.5.0",
     "request": "^2.88.0",
+    "rimraf": "^3.0.2",
     "sweetalert2": "^7.0.9",
     "underscore": "^1.8.3",
     "vee-validate": "^2.0.0-rc.25",

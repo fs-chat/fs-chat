@@ -66,7 +66,7 @@ export function signInGoogleApi(token, type) {
     mine: true
   }, function(err, response) {
     if (err) {
-      console.log('The API returned an error: ' + err);
+      console.log('The API returned an error: ', err);
       return;
     }
     var channels = response.data.items;

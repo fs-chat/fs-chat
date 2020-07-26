@@ -94,38 +94,40 @@ var Game = {
           // Check time validity before landing
           if (diffMinutes < minutesSetting) {
             var channelId = comment.snippet.authorChannelId;
-            var message = comment.snippet.textMessageDetails.messageText.replace(',','.');
+            if (comment.snippet.textMessageDetails) {
+              var message = comment.snippet.textMessageDetails.messageText.replace(',','.');
 
-            var placeBet = false;
-            var deleteBetIndex = null;
-            var existingBetIndex = store.state.bets.findIndex(bet => {
-              return bet.comment.snippet.authorChannelId == comment.snippet.authorChannelId;
-            });
+              var placeBet = false;
+              var deleteBetIndex = null;
+              var existingBetIndex = store.state.bets.findIndex(bet => {
+                return bet.comment.snippet.authorChannelId == comment.snippet.authorChannelId;
+              });
 
-            if (global.__settings.multipleBets == true) {
-              placeBet = true;
-            } else if (gameMode == GAME_MODES.LAST_BET_OVERWRITE) {
-              if (existingBetIndex != -1) {
-                // Delete current bet for user
-                deleteBetIndex = existingBetIndex;
+              if (global.__settings.multipleBets == true) {
+                placeBet = true;
+              } else if (gameMode == GAME_MODES.LAST_BET_OVERWRITE) {
+                if (existingBetIndex != -1) {
+                  // Delete current bet for user
+                  deleteBetIndex = existingBetIndex;
+                }
+                placeBet = true;
+              } else if (gameMode == GAME_MODES.FIRST_BET_STANDING) {
+                if (existingBetIndex == -1) placeBet = true;
               }
-              placeBet = true;
-            } else if (gameMode == GAME_MODES.FIRST_BET_STANDING) {
-              if (existingBetIndex == -1) placeBet = true;
-            }
 
-            if (placeBet && message) {
-              // Check eligibility for placing bets
-              // Must be a string up to 20 characters containing a number
-              var numberParse = message.match(/[\d\.]+/g);
-              if (numberParse && message.length <= 20) {
-                var numbers = numberParse.map(Number);
-                if (numbers.length == 1 && !isNaN(numbers[0])) {
-                  if (deleteBetIndex != null) store.commit('deleteBet', deleteBetIndex); 
-                  store.commit('placeBet', {  
-                    value: numbers[0],
-                    comment: comment
-                  });
+              if (placeBet && message) {
+                // Check eligibility for placing bets
+                // Must be a string up to 20 characters containing a number
+                var numberParse = message.match(/[\d\.]+/g);
+                if (numberParse && message.length <= 20) {
+                  var numbers = numberParse.map(Number);
+                  if (numbers.length == 1 && !isNaN(numbers[0])) {
+                    if (deleteBetIndex != null) store.commit('deleteBet', deleteBetIndex); 
+                    store.commit('placeBet', {  
+                      value: numbers[0],
+                      comment: comment
+                    });
+                  }
                 }
               }
             }

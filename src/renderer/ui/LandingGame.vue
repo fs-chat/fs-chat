@@ -99,7 +99,6 @@
                       <ul class="list-group landing-bets-list">
                         <li class="list-group-item d-flex justify-content-between align-items-center" v-for="(bet, index) in bets"
                             v-on:click.prevent="deleteBet(bet,index)">
-                          <img :src="bet.comment.authorDetails.profileImageUrl" alt="" class="profile-image">
                           <span class="profile-name">{{ bet.comment.authorDetails.displayName }}</span>
                           <span class="badge badge-secondary badge-pill rate-badge">- {{ bet.value }}</span>
                         </li>

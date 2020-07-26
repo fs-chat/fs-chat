@@ -86,7 +86,6 @@
                       <template v-if="dataSorted.length > 0">
                         <tr v-for="(result, index) in dataSorted.slice(0, limitShow)">
                           <th scope="row">{{ index + 1 }}</th>
-                          <td><img :src="result.user.profileImageUrl" class="profile-image"></td>
                           <td>{{ result.user.displayName }}</td>
                           <td>{{ result.nbComments }}</td>
                           <td>{{ result.average }}</td>
